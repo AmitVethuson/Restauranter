@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1011003375223",
+    "project_id": "restaraunterapp",
+    "storage_bucket": "restaraunterapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1011003375223:android:23fda947ad28c6bb929072",
+        "android_client_info": {
+          "package_name": "com.example.restaraunt_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1011003375223-ijq7361t2g4erpk5qveg9vfsrgil6spg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiWkePdYHE6489uF6NwyJs6meRWNlZD8g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1011003375223-ijq7361t2g4erpk5qveg9vfsrgil6spg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
