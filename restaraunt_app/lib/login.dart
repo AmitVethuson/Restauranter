@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 
+// @dart=2.9
 class login extends StatelessWidget {
-  const login({Key? key}) : super(key: key);
+  CollectionReference? usersRef;
+
+  login({Key? key, this.usersRef}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -9,13 +14,16 @@ class login extends StatelessWidget {
       appBar: AppBar(
         title: Text("Login"),
       ),
-      body: LoginForm(),
+      body: LoginForm(
+        usersRef: usersRef,
+      ),
     );
   }
 }
 
 class LoginForm extends StatefulWidget {
-  const LoginForm({Key? key}) : super(key: key);
+  CollectionReference? usersRef;
+  LoginForm({Key? key, this.usersRef}) : super(key: key);
 
   @override
   _LoginFormState createState() => _LoginFormState();
@@ -67,6 +75,7 @@ class _LoginFormState extends State<LoginForm> {
 
               //password text form
               TextFormField(
+                controller: passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
                     labelText: "Password",
@@ -95,12 +104,22 @@ class _LoginFormState extends State<LoginForm> {
               ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      print("Login Successful");
+                      loginInfo();
                     }
                   },
                   child: Text("Login"))
             ],
           ),
         ));
+  }
+
+  Future<void> loginInfo() async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection("users")
+        .where('email', isEqualTo:emailController.text)
+        .get();
+    QueryDocumentSnapshot doc = querySnapshot.docs[0];
+    if (doc["password"] == passwordController.text) {
+    }
   }
 }
