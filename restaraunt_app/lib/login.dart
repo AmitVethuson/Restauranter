@@ -33,6 +33,7 @@ class _LoginFormState extends State<LoginForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   //input controllers
+  bool? isVerified;
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   @override
@@ -116,10 +117,46 @@ class _LoginFormState extends State<LoginForm> {
   Future<void> loginInfo() async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection("users")
-        .where('email', isEqualTo:emailController.text)
-        .get();
+        .where('email', isEqualTo: emailController.text)
+        .get()
+        .catchError((error) => print("Failed to add user: $error"));
+        print(querySnapshot.size);
+    if(querySnapshot.size!=0){
+      //When the data exists it will return an array of size 1, else
+      //it will bring a size of 0 so when we do the below line it will
+      //cause an index error which breaks the code.
     QueryDocumentSnapshot doc = querySnapshot.docs[0];
-    if (doc["password"] == passwordController.text) {
-    }
+      if (doc["password"] == passwordController.text) {
+        //if true then it will go to new page
+
+      }else {
+        print("test");
+        //if false then add a red text saying something wrong!
+        _showAlertDialog(context);
+      } 
+    }else {
+        print("test");
+        //if false then add a red text saying something wrong!
+        _showAlertDialog(context);
+      }
+  
+  }
+
+  _showAlertDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Incorrect Information"),
+            content: Text("Email or Password is incorrect please try again"),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    return Navigator.pop(context);
+                  },
+                  child: Text("Close")),
+            ],
+          );
+        });
   }
 }
