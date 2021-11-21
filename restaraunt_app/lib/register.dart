@@ -128,7 +128,10 @@ class _registerForm extends State<registerForm> {
               SizedBox(
                 height: 20,
               ),
-              ElevatedButton(onPressed: () {}, child: Text("Register"))
+              ElevatedButton(onPressed: () {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => register()));
+              }, child: Text("Register"))
             ],
           ),
         ));

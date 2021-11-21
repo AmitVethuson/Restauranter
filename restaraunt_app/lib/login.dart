@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:restaraunt_app/homepage.dart';
 
 class login extends StatelessWidget {
   const login({Key? key}) : super(key: key);
@@ -95,7 +96,8 @@ class _LoginFormState extends State<LoginForm> {
               ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      print("Login Successful");
+                      Navigator.push(
+                        context, MaterialPageRoute(builder: (context) => HomePage()));
                     }
                   },
                   child: Text("Login"))
