@@ -6,6 +6,7 @@ import 'package:google_place/google_place.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:http/http.dart' as http;
+import 'restaurantpage.dart';
 import 'restaurant_model.dart';
 
 class ListViewWidget extends StatefulWidget {
@@ -94,9 +95,14 @@ class _ListViewWidget extends State<ListViewWidget> {
                           ])),
                 ])),
             onTap: () => {
-                  print(restaurants[index].name),
+              
+                Navigator.push(
+                context, MaterialPageRoute(builder: (context) => RestaurantPage(currentrestaurant:restaurants[index]))),
+                   
+                   print(restaurants[index].name),
                 }));
   }
+
 
   Future<Position> getLocation() async {
     status = await Geolocator.isLocationServiceEnabled();

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-
+import 'restaurant_model.dart';
 
 //resturant page
 class RestaurantPage extends StatefulWidget {
-  const RestaurantPage({Key? key}) : super(key: key);
-
+  const RestaurantPage({Key? key,required this.currentrestaurant}) : super(key: key);
+  final RestaurantModel currentrestaurant;
   @override
   State<RestaurantPage> createState() => _RestaurantPageState();
 }
@@ -18,10 +18,10 @@ class _RestaurantPageState extends State<RestaurantPage> {
           backgroundColor: Colors.transparent,
           elevation: 0.0,
           centerTitle: true,
-          title: Text("Restaurant Name",
+          title: Text("${widget.currentrestaurant.name}",
               style: TextStyle(color: Colors.black, fontSize: 25)),
           bottom: PreferredSize(
-              child: RestaurantInfo(), preferredSize: Size.fromHeight(50)),
+              child: RestaurantInfo(restaurantInformation:widget.currentrestaurant), preferredSize: Size.fromHeight(50)),
         ),
         body: SingleChildScrollView(
           child: RestarauntPageContent(),
@@ -31,8 +31,8 @@ class _RestaurantPageState extends State<RestaurantPage> {
 
 //top bar Restaurant information
 class RestaurantInfo extends StatefulWidget {
-  const RestaurantInfo({Key? key}) : super(key: key);
-
+  const RestaurantInfo({Key? key,required this.restaurantInformation}) : super(key: key);
+  final RestaurantModel restaurantInformation;
   @override
   State<RestaurantInfo> createState() => _RestaurantInfoState();
 }
@@ -51,7 +51,7 @@ class _RestaurantInfoState extends State<RestaurantInfo> {
         //Location data
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [Icon(Icons.location_on_outlined), Text("Location")],
+          children: [Icon(Icons.location_on_outlined), Text("${widget.restaurantInformation.address}")],
         ),
         SizedBox(
           height: 10,
@@ -66,7 +66,7 @@ class _RestaurantInfoState extends State<RestaurantInfo> {
               child: Row(
                 children: [
                   Icon(Icons.star_border_outlined,size: iconSize),
-                  Text("Rating: 4.7",
+                  Text("Rating: ${widget.restaurantInformation.rating}",
                       style: TextStyle(color: Colors.black, fontSize: 12)),
                 ],
               ),
@@ -132,7 +132,9 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        print("menu");
+                      },
                       child: Text("Menu"),
                       style: ElevatedButton.styleFrom(
                           minimumSize: Size(100, 50), primary: Colors.brown)),
@@ -145,7 +147,7 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
 
 
           SizedBox(height: 30),
-          //seasting button
+          //seating button
           Container(
             width: 350,
             height: 150,
