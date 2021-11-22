@@ -1,4 +1,3 @@
-import 'package:google_place/google_place.dart';
 
 class RestaurantModel {
   String name;

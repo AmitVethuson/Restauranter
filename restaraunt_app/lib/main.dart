@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:restaraunt_app/homepage.dart';
 import 'register.dart';
 import 'login.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -51,25 +55,32 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               Padding(padding: EdgeInsets.only(bottom: 30.0)),
               ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context, MaterialPageRoute(builder: (context) => login()));
-                  },
-                  child: const Text("Login", style:TextStyle(fontFamily: "Sora", color: Colors.black)),
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                    shadowColor:  MaterialStateProperty.all<Color>(Colors.black),
-                  )),
+                onPressed: () {
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => login()));
+                },
+                child: const Text("Login", style:TextStyle(fontFamily: "Sora", color: Colors.black)),
+                style: ElevatedButton.styleFrom(
+                  side: BorderSide(width: 1.0),
+                  primary: Colors.white,
+                  shadowColor: Colors.black,
+                  elevation: 2.0
+                )),
               Padding(padding: EdgeInsets.only(bottom: 10.0)),
               ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context, MaterialPageRoute(builder: (context) => register()));
-                  },
-                  child: const Text("Register", style:TextStyle(color: Colors.black)),
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                  )),
+                onPressed: () {
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => register()));
+                },
+                child: const Text("Register", style:TextStyle(color: Colors.black)),
+                
+                style: ElevatedButton.styleFrom(
+                  side: BorderSide(width: 1.0),
+                  primary: Colors.white,
+                  shadowColor: Colors.black,
+                  elevation: 2.0
+                ),
+              ),
             ],
           )
         ),
