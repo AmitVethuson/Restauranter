@@ -36,10 +36,16 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_core: 
   cloud_firestore: 
+  google_place: ^0.4.3
+  http: ^0.13.4
+  geolocator: ^7.7.1
+  geocoding: ^2.0.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  google_maps_flutter:
+  flutter_google_places:
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -60,9 +66,10 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/images/logo.png
+    - assets/images/bg.png
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -75,10 +82,10 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
+  fonts:
+    - family: Sora
+      fonts:
+        - asset: assets/fonts/Sora-VariableFont_wght.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
