@@ -12,9 +12,22 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class HomePageContent extends StatelessWidget {
+class HomePageContent extends StatefulWidget {
+  @override
+  State<HomePageContent> createState() => _HomePageContentState();
+}
+
+class _HomePageContentState extends State<HomePageContent> {
+  int currentIndex = 0;
+  final screens = [
+    const ListViewWidget(),
+    Center(child: Text('Search')),
+    Center(child: Text('Profile Page')),
+  ];
+
   final TextEditingController addressController =
       TextEditingController(text: "address placeholder");
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +54,27 @@ class HomePageContent extends StatelessWidget {
             )),
         backgroundColor: const Color.fromRGBO(242, 242, 242, 1),
       ),
-      body: const ListViewWidget(),
+      body: screens[currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        currentIndex: currentIndex,
+        onTap: (index) => setState(() => currentIndex = index),
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: "Home",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: "Search",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: "Profile",
+          )
+        ],
+      ),
     );
   }
 }
