@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_place/google_place.dart';
 import 'package:flutter/material.dart';
@@ -94,8 +95,8 @@ class _ListViewWidget extends State<ListViewWidget> {
                             })),
                           ])),
                 ])),
-            onTap: () => {
-              
+            onTap: () async => {
+                checkFirestore(restaurants[index].name),
                 Navigator.push(
                 context, MaterialPageRoute(builder: (context) => RestaurantPage(currentrestaurant:restaurants[index]))),
                    
@@ -134,7 +135,7 @@ class _ListViewWidget extends State<ListViewWidget> {
     const baseUrl =
         'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
     String url =
-        '$baseUrl?key=$apiKey&location=${coordinates[0]},${coordinates[1]}&radius=800&keyword=$keyword';
+        '$baseUrl?key=$apiKey&location=${coordinates[0]},${coordinates[1]}&radius=800&type=restaurant';
     var response = await http.get(Uri.parse(url));
     Map<String, dynamic> data =
         Map<String, dynamic>.from(jsonDecode(response.body));
@@ -168,5 +169,16 @@ class _ListViewWidget extends State<ListViewWidget> {
         await placemarkFromCoordinates(position.latitude, position.longitude);
     Placemark address = placemark[0];
     print("${address.street} : ${address.locality}");
+  }
+
+  checkFirestore(String name) async {
+    await FirebaseFirestore.instance
+      .collection("restaurant")
+      .where('name', isEqualTo: name)
+      .get()
+      .then((value) => {
+        if (value.size == 0) FirebaseFirestore.instance
+      .collection("restaurant").add({'name':name, 'wait_time':0})
+      });
   }
 }

@@ -1,17 +1,21 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'restaurant_model.dart';
 
 //resturant page
 class RestaurantPage extends StatefulWidget {
-  const RestaurantPage({Key? key,required this.currentrestaurant}) : super(key: key);
+  const RestaurantPage({Key? key, required this.currentrestaurant})
+      : super(key: key);
   final RestaurantModel currentrestaurant;
   @override
   State<RestaurantPage> createState() => _RestaurantPageState();
 }
 
 class _RestaurantPageState extends State<RestaurantPage> {
+  late RestaurantModel restaurant;
   @override
   Widget build(BuildContext context) {
+    restaurant = widget.currentrestaurant;
     return Scaffold(
         appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.black),
@@ -21,25 +25,45 @@ class _RestaurantPageState extends State<RestaurantPage> {
           title: Text("${widget.currentrestaurant.name}",
               style: TextStyle(color: Colors.black, fontSize: 25)),
           bottom: PreferredSize(
-              child: RestaurantInfo(restaurantInformation:widget.currentrestaurant), preferredSize: Size.fromHeight(50)),
+              child: RestaurantInfo(
+                  restaurantInformation: widget.currentrestaurant),
+              preferredSize: Size.fromHeight(50)),
         ),
         body: SingleChildScrollView(
-          child: RestarauntPageContent(),
+          child: RestarauntPageContent(
+              restaurantInformation: widget.currentrestaurant),
         ));
+  }
+
+  updatePage() {
+    setState(() {
+      restaurant = widget.currentrestaurant;
+    });
   }
 }
 
 //top bar Restaurant information
 class RestaurantInfo extends StatefulWidget {
-  const RestaurantInfo({Key? key,required this.restaurantInformation}) : super(key: key);
+  const RestaurantInfo({Key? key, required this.restaurantInformation})
+      : super(key: key);
   final RestaurantModel restaurantInformation;
   @override
   State<RestaurantInfo> createState() => _RestaurantInfoState();
 }
 
 class _RestaurantInfoState extends State<RestaurantInfo> {
+  int waittime = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    getQueueTime(widget.restaurantInformation.name);
+  }
+
   @override
   Widget build(BuildContext context) {
+    CollectionReference collectionReference =
+        FirebaseFirestore.instance.collection("restaurant");
     double iconSize = 22;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -51,7 +75,10 @@ class _RestaurantInfoState extends State<RestaurantInfo> {
         //Location data
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [Icon(Icons.location_on_outlined), Text("${widget.restaurantInformation.address}")],
+          children: [
+            Icon(Icons.location_on_outlined),
+            Text("${widget.restaurantInformation.address}")
+          ],
         ),
         SizedBox(
           height: 10,
@@ -65,7 +92,7 @@ class _RestaurantInfoState extends State<RestaurantInfo> {
             Container(
               child: Row(
                 children: [
-                  Icon(Icons.star_border_outlined,size: iconSize),
+                  Icon(Icons.star_border_outlined, size: iconSize),
                   Text("Rating: ${widget.restaurantInformation.rating}",
                       style: TextStyle(color: Colors.black, fontSize: 12)),
                 ],
@@ -75,7 +102,7 @@ class _RestaurantInfoState extends State<RestaurantInfo> {
             Container(
               child: Row(
                 children: [
-                  Icon(Icons.calendar_today,size: iconSize),
+                  Icon(Icons.calendar_today, size: iconSize),
                   Text("Hours: 11:00 AM - 7:00 PM",
                       style: TextStyle(color: Colors.black, fontSize: 12)),
                 ],
@@ -85,9 +112,27 @@ class _RestaurantInfoState extends State<RestaurantInfo> {
             Container(
                 child: Row(
               children: [
-                Icon(Icons.access_time,size: iconSize),
-                Text("Queue Time: 20 min",
-                    style: TextStyle(color: Colors.black, fontSize: 12))
+                Icon(Icons.access_time, size: iconSize),
+                StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection("restaurant")
+                        .where('name',
+                            isEqualTo: widget.restaurantInformation.name)
+                        .snapshots(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (!snapshot.hasData) {
+                        return Text("Queue Time:0 min");
+                      }
+                      final result = snapshot.data!.docs[0]["wait_time"];
+
+                      var time = (result ~/ 60).toString() +
+                          'h ' +
+                          (result % 60).toString() +
+                          'min ';
+                      print(time);
+                      return Text('${time}');
+                    }),
               ],
             ))
           ],
@@ -95,19 +140,33 @@ class _RestaurantInfoState extends State<RestaurantInfo> {
       ],
     );
   }
+
+  getQueueTime(String restaurantName) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection("restaurant")
+        .where('name', isEqualTo: restaurantName)
+        .get();
+    QueryDocumentSnapshot doc = querySnapshot.docs[0];
+    setState(() {
+      waittime = doc["wait_time"];
+    });
+  }
 }
-
-
 
 //restaraunt page  Content
 class RestarauntPageContent extends StatefulWidget {
-  const RestarauntPageContent({Key? key}) : super(key: key);
+  const RestarauntPageContent({Key? key, required this.restaurantInformation})
+      : super(key: key);
+  final RestaurantModel restaurantInformation;
 
   @override
   _RestarauntPageContentState createState() => _RestarauntPageContentState();
 }
 
 class _RestarauntPageContentState extends State<RestarauntPageContent> {
+  MaterialStateProperty<Color> color =
+      MaterialStateProperty.all<Color>(Colors.green);
+  bool isDisabled = true;
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -119,8 +178,21 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
 
           //restaurant description
           description(),
-          SizedBox(height: 50),
-
+          SizedBox(height: 10),
+          ElevatedButton.icon(
+              onPressed: (isDisabled == false)
+                  ? null
+                  : () {
+                      updateQueue(widget.restaurantInformation.name);
+                      setState(() {   
+                        color = MaterialStateProperty.all<Color>(Colors.red);
+                        isDisabled = !isDisabled;
+                      });
+                      print('added');
+                    },
+              style: ButtonStyle(backgroundColor: color),
+              icon: Icon(Icons.person_add),
+              label: Text('Add to queue')),
           //menu button
           Container(
             width: 350,
@@ -144,7 +216,6 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
                   )
                 ]),
           ),
-
 
           SizedBox(height: 30),
           //seating button
@@ -207,5 +278,17 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
             Text(test),
           ],
         ));
+  }
+
+  updateQueue(String restaurantName) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection("restaurant")
+        .where('name', isEqualTo: restaurantName)
+        .get();
+    QueryDocumentSnapshot doc = querySnapshot.docs[0];
+    DocumentReference docRef = doc.reference;
+    docRef.update({'wait_time': FieldValue.increment(10)});
+
+    setState(() {});
   }
 }
