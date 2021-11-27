@@ -37,6 +37,7 @@ class _registerForm extends State<registerForm> {
   final provinceController = TextEditingController();
   final cityController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
 
   @override
   Widget build(BuildContext context) {
@@ -162,7 +163,7 @@ class _registerForm extends State<registerForm> {
                   ElevatedButton(
                       onPressed: () {
                         print(firstNameController.text);
-                        registerInfo();
+                        registerInfo(users);
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -174,8 +175,8 @@ class _registerForm extends State<registerForm> {
             )));
   }
 
-  Future<void> registerInfo() {
-    return widget.usersRef!.add({
+  Future<void> registerInfo(CollectionReference users) {
+    return users.add({
       'firstName': firstNameController.text,
       'lastName': lastNameController.text,
       'password': passwordController.text,
