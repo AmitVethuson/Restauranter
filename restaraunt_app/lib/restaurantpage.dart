@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'seatingpage.dart';
 import 'restaurant_model.dart';
 
 //resturant page
@@ -229,7 +230,10 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                         Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => SeatingPage()));
+                      },
                       child: Text("Seating"),
                       style: ElevatedButton.styleFrom(
                           minimumSize: Size(100, 50), primary: Colors.brown)),
