@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:restaraunt_app/homepage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'db_helper.dart';
 
 // @dart=2.9
 class login extends StatelessWidget {
@@ -127,13 +128,25 @@ class _LoginFormState extends State<LoginForm> {
       //it will bring a size of 0 so when we do the below line it will
       //cause an index error which breaks the code.
       QueryDocumentSnapshot doc = querySnapshot.docs[0];
+      print(doc["phoneNumber"]);
+      print("cutaway");
       if (doc["password"] == passwordController.text) {
+        int result = await DBHelper.dbHelper.insertUserInfo({
+          "city": doc["city"],
+          "country": doc["country"],
+          "email": doc["email"],
+          "firstName": doc["firstName"],
+          "lastName": doc["lastName"],
+          "password": doc["phoneNumber"],
+          "province": doc["province"],
+          
+        });
         //if true then it will go to new page
         Navigator.pop(context);
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => HomePage()));
+                builder: (context) => HomePage(doc["email"], doc["password"])));
       } else {
         print("test");
         //if false then add a red text saying something wrong!

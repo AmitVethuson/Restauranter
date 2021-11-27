@@ -1,19 +1,28 @@
 import 'package:flutter/material.dart';
 
 import 'listview.dart';
+import 'profile_page.dart';
 // import 'listview.dart';
+String globPassword = '';
+String globEmail = '';
 
 class HomePage extends StatelessWidget {
+  String password = '';
+  String email = '';
+  HomePage(this.email,this.password);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Restaurant System',
-      home: HomePageContent(),
+      home: HomePageContent(email,password),
     );
   }
 }
 
 class HomePageContent extends StatefulWidget {
+  String password = '';
+  String email = '';
+  HomePageContent(this.email,this.password);
   @override
   State<HomePageContent> createState() => _HomePageContentState();
 }
@@ -23,7 +32,8 @@ class _HomePageContentState extends State<HomePageContent> {
   final screens = [
     const ListViewWidget(),
     Center(child: Text('Search')),
-    Center(child: Text('Profile Page')),
+    ProfilePage(" "," "),
+
   ];
 
   final TextEditingController addressController =
