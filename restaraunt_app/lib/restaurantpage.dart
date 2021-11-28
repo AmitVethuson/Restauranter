@@ -7,6 +7,7 @@ import 'restaurant_model.dart';
 class RestaurantPage extends StatefulWidget {
   const RestaurantPage({Key? key, required this.currentrestaurant})
       : super(key: key);
+  
   final RestaurantModel currentrestaurant;
   @override
   State<RestaurantPage> createState() => _RestaurantPageState();
@@ -232,7 +233,7 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
                   ElevatedButton(
                       onPressed: () {
                          Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => SeatingPage()));
+                      context, MaterialPageRoute(builder: (context) => SeatingPage(restaurantName: widget.restaurantInformation.name)));
                       },
                       child: Text("Seating"),
                       style: ElevatedButton.styleFrom(
