@@ -8,7 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -57,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => login()));
+                      context, MaterialPageRoute(builder: (context) => HomePage()));
                 },
                 child: const Text("Login", style:TextStyle(fontFamily: "Sora", color: Colors.black)),
                 style: ElevatedButton.styleFrom(
