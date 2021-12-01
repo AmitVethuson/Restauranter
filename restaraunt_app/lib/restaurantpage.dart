@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'seatingpage.dart';
 import 'restaurant_model.dart';
 
 //resturant page
 class RestaurantPage extends StatefulWidget {
   const RestaurantPage({Key? key, required this.currentrestaurant})
       : super(key: key);
+  
   final RestaurantModel currentrestaurant;
   @override
   State<RestaurantPage> createState() => _RestaurantPageState();
@@ -229,7 +231,10 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                         Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => SeatingPage(restaurantName: widget.restaurantInformation.name)));
+                      },
                       child: Text("Seating"),
                       style: ElevatedButton.styleFrom(
                           minimumSize: Size(100, 50), primary: Colors.brown)),

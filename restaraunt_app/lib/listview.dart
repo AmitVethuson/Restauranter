@@ -96,14 +96,15 @@ class _ListViewWidget extends State<ListViewWidget> {
                           ])),
                 ])),
             onTap: () async => {
-                checkFirestore(restaurants[index].name),
-                Navigator.push(
-                context, MaterialPageRoute(builder: (context) => RestaurantPage(currentrestaurant:restaurants[index]))),
-                   
-                   print(restaurants[index].name),
+                  checkFirestore(restaurants[index].name),
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => RestaurantPage(
+                              currentrestaurant: restaurants[index]))),
+                  print(restaurants[index].name),
                 }));
   }
-
 
   Future<Position> getLocation() async {
     status = await Geolocator.isLocationServiceEnabled();
@@ -173,12 +174,135 @@ class _ListViewWidget extends State<ListViewWidget> {
 
   checkFirestore(String name) async {
     await FirebaseFirestore.instance
-      .collection("restaurant")
-      .where('name', isEqualTo: name)
-      .get()
-      .then((value) => {
-        if (value.size == 0) FirebaseFirestore.instance
-      .collection("restaurant").add({'name':name, 'wait_time':0})
-      });
+        .collection("restaurant")
+        .where('name', isEqualTo: name)
+        .get()
+        .then((value) => {
+              if (value.size == 0)
+                FirebaseFirestore.instance.collection("restaurant").add({
+                  'name': name,
+                  'wait_time': 0,
+                  'table1': {
+                    '12': {'time': 12, 'isAvailable': true},
+                    '13': {'time': 13, 'isAvailable': true},
+                    '14': {'time': 14, 'isAvailable': true},
+                    '15': {'time': 15, 'isAvailable': true},
+                    '16': {'time': 16, 'isAvailable': true},
+                    '17': {'time': 17, 'isAvailable': true},
+                    '18': {'time': 18, 'isAvailable': true},
+                    '19': {'time': 19, 'isAvailable': true},
+                    '20': {'time': 20, 'isAvailable': true},
+                    '21': {'time': 21, 'isAvailable': true},
+                    '22': {'time': 22, 'isAvailable': true},
+                    '23': {'time': 23, 'isAvailable': true}
+
+                  },
+                  'table2': {
+                    '12': {'time': 12, 'isAvailable': true},
+                    '13': {'time': 13, 'isAvailable': true},
+                    '14': {'time': 14, 'isAvailable': true},
+                    '15': {'time': 15, 'isAvailable': true},
+                    '16': {'time': 16, 'isAvailable': true},
+                    '17': {'time': 17, 'isAvailable': true},
+                    '18': {'time': 18, 'isAvailable': true},
+                    '19': {'time': 19, 'isAvailable': true},
+                    '20': {'time': 20, 'isAvailable': true},
+                    '21': {'time': 21, 'isAvailable': true},
+                    '22': {'time': 22, 'isAvailable': true},
+                    '23': {'time': 23, 'isAvailable': true}
+
+                  },
+                  'table3': {
+                    '12': {'time': 12, 'isAvailable': true},
+                    '13': {'time': 13, 'isAvailable': true},
+                    '14': {'time': 14, 'isAvailable': true},
+                    '15': {'time': 15, 'isAvailable': true},
+                    '16': {'time': 16, 'isAvailable': true},
+                    '17': {'time': 17, 'isAvailable': true},
+                    '18': {'time': 18, 'isAvailable': true},
+                    '19': {'time': 19, 'isAvailable': true},
+                    '20': {'time': 20, 'isAvailable': true},
+                    '21': {'time': 21, 'isAvailable': true},
+                    '22': {'time': 22, 'isAvailable': true},
+                    '23': {'time': 23, 'isAvailable': true}
+
+                  },
+                  'table4': {
+                    '12': {'time': 12, 'isAvailable': true},
+                    '13': {'time': 13, 'isAvailable': true},
+                    '14': {'time': 14, 'isAvailable': true},
+                    '15': {'time': 15, 'isAvailable': true},
+                    '16': {'time': 16, 'isAvailable': true},
+                    '17': {'time': 17, 'isAvailable': true},
+                    '18': {'time': 18, 'isAvailable': true},
+                    '19': {'time': 19, 'isAvailable': true},
+                    '20': {'time': 20, 'isAvailable': true},
+                    '21': {'time': 21, 'isAvailable': true},
+                    '22': {'time': 22, 'isAvailable': true},
+                    '23': {'time': 23, 'isAvailable': true}
+
+                  },
+                  'table5': {
+                    '12': {'time': 12, 'isAvailable': true},
+                    '13': {'time': 13, 'isAvailable': true},
+                    '14': {'time': 14, 'isAvailable': true},
+                    '15': {'time': 15, 'isAvailable': true},
+                    '16': {'time': 16, 'isAvailable': true},
+                    '17': {'time': 17, 'isAvailable': true},
+                    '18': {'time': 18, 'isAvailable': true},
+                    '19': {'time': 19, 'isAvailable': true},
+                    '20': {'time': 20, 'isAvailable': true},
+                    '21': {'time': 21, 'isAvailable': true},
+                    '22': {'time': 22, 'isAvailable': true},
+                    '23': {'time': 23, 'isAvailable': true}
+
+                  },
+                  'table6': {
+                    '12': {'time': 12, 'isAvailable': true},
+                    '13': {'time': 13, 'isAvailable': true},
+                    '14': {'time': 14, 'isAvailable': true},
+                    '15': {'time': 15, 'isAvailable': true},
+                    '16': {'time': 16, 'isAvailable': true},
+                    '17': {'time': 17, 'isAvailable': true},
+                    '18': {'time': 18, 'isAvailable': true},
+                    '19': {'time': 19, 'isAvailable': true},
+                    '20': {'time': 20, 'isAvailable': true},
+                    '21': {'time': 21, 'isAvailable': true},
+                    '22': {'time': 22, 'isAvailable': true},
+                    '23': {'time': 23, 'isAvailable': true}
+
+                  },
+                  'table7': {
+                    '12': {'time': 12, 'isAvailable': true},
+                    '13': {'time': 13, 'isAvailable': true},
+                    '14': {'time': 14, 'isAvailable': true},
+                    '15': {'time': 15, 'isAvailable': true},
+                    '16': {'time': 16, 'isAvailable': true},
+                    '17': {'time': 17, 'isAvailable': true},
+                    '18': {'time': 18, 'isAvailable': true},
+                    '19': {'time': 19, 'isAvailable': true},
+                    '20': {'time': 20, 'isAvailable': true},
+                    '21': {'time': 21, 'isAvailable': true},
+                    '22': {'time': 22, 'isAvailable': true},
+                    '23': {'time': 23, 'isAvailable': true}
+
+                  },
+                  'table8': {
+                    '12': {'time': 12, 'isAvailable': true},
+                    '13': {'time': 13, 'isAvailable': true},
+                    '14': {'time': 14, 'isAvailable': true},
+                    '15': {'time': 15, 'isAvailable': true},
+                    '16': {'time': 16, 'isAvailable': true},
+                    '17': {'time': 17, 'isAvailable': true},
+                    '18': {'time': 18, 'isAvailable': true},
+                    '19': {'time': 19, 'isAvailable': true},
+                    '20': {'time': 20, 'isAvailable': true},
+                    '21': {'time': 21, 'isAvailable': true},
+                    '22': {'time': 22, 'isAvailable': true},
+                    '23': {'time': 23, 'isAvailable': true}
+
+                  },
+                })
+            });
   }
 }
