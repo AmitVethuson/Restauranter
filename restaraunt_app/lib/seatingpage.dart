@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'db_helper.dart';
 
 class SeatingPage extends StatefulWidget {
   const SeatingPage({Key? key, required this.restaurantName}) : super(key: key);
@@ -45,7 +46,7 @@ class _SeatingPageState extends State<SeatingPage> {
               return Text("Error: No data");
             }
             final result = snapshot.data!.docs[0];
-            return SeatingPageContent(res: result, FBinstance: temp,time: selectedTime,);
+            return SeatingPageContent(res: result, FBinstance: temp,time: selectedTime, restaurantName: widget.restaurantName,);
           }),
     );
   }
@@ -312,11 +313,12 @@ class _SeatingPageState extends State<SeatingPage> {
 }
 
 class SeatingPageContent extends StatefulWidget {
-  SeatingPageContent({Key? key, required this.res, required this.FBinstance, required this.time})
+  SeatingPageContent({Key? key, required this.res, required this.FBinstance, required this.time, required this.restaurantName})
       : super(key: key);
   final res;
   var FBinstance;
   String time;
+  String restaurantName;
   @override
   _SeatingPageContentState createState() => _SeatingPageContentState();
 }
@@ -337,6 +339,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
               onPressed:(widget.res.get("table1")[widget.time]["isAvailable"] == false)? null: () {
                 String tabletime = "table1.${widget.time}.isAvailable";
                   updateTablesAvailability(tabletime);
+                  addReservation(widget.restaurantName,widget.time,"1");
               },
               icon: Icon(Icons.food_bank_outlined, color: (widget.res.get("table1")[widget.time]["isAvailable"] == true)? Colors.blue:Colors.red),
               iconSize: 100,
@@ -352,6 +355,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
               onPressed:(widget.res.get("table2")[widget.time]["isAvailable"] == false)? null: () {
                 String tabletime = "table2.${widget.time}.isAvailable";
                   updateTablesAvailability(tabletime);
+                  addReservation(widget.restaurantName,widget.time,"2");
               },
               icon: Icon(Icons.food_bank_outlined, color: (widget.res.get("table2")[widget.time]["isAvailable"] == true)? Colors.blue:Colors.red),
               iconSize: 100,
@@ -367,6 +371,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
               onPressed:(widget.res.get("table3")[widget.time]["isAvailable"] == false)? null: () {
                 String tabletime = "table3.${widget.time}.isAvailable";
                   updateTablesAvailability(tabletime);
+                  addReservation(widget.restaurantName,widget.time,"3");
               },
               icon: Icon(Icons.food_bank_outlined, color: (widget.res.get("table3")[widget.time]["isAvailable"] == true)? Colors.blue:Colors.red),
               iconSize: 100,
@@ -382,6 +387,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
               onPressed:(widget.res.get("table4")[widget.time]["isAvailable"] == false)? null: () {
                 String tabletime = "table4.${widget.time}.isAvailable";
                   updateTablesAvailability(tabletime);
+                  addReservation(widget.restaurantName,widget.time,"4");
               },
               icon: Icon(Icons.food_bank_outlined, color: (widget.res.get("table4")[widget.time]["isAvailable"] == true)? Colors.blue:Colors.red),
               iconSize: 100,
@@ -397,6 +403,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
               onPressed:(widget.res.get("table5")[widget.time]["isAvailable"] == false)? null: () {
                 String tabletime = "table5.${widget.time}.isAvailable";
                   updateTablesAvailability(tabletime);
+                  addReservation(widget.restaurantName,widget.time,"5");
               },
               icon: Icon(Icons.food_bank_outlined, color: (widget.res.get("table5")[widget.time]["isAvailable"] == true)? Colors.blue:Colors.red),
               iconSize: 100,
@@ -412,6 +419,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
               onPressed:(widget.res.get("table6")[widget.time]["isAvailable"] == false)? null: () {
                 String tabletime = "table6.${widget.time}.isAvailable";
                   updateTablesAvailability(tabletime);
+                  addReservation(widget.restaurantName,widget.time,"6");
               },
               icon: Icon(Icons.food_bank_outlined, color: (widget.res.get("table6")[widget.time]["isAvailable"] == true)? Colors.blue:Colors.red),
               iconSize: 100,
@@ -427,6 +435,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
               onPressed:(widget.res.get("table7")[widget.time]["isAvailable"] == false)? null: () {
                 String tabletime = "table7.${widget.time}.isAvailable";
                   updateTablesAvailability(tabletime);
+                  addReservation(widget.restaurantName,widget.time,"7");
               },
               icon: Icon(Icons.food_bank_outlined, color: (widget.res.get("table7")[widget.time]["isAvailable"] == true)? Colors.blue:Colors.red),
               iconSize: 100,
@@ -442,6 +451,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
               onPressed:(widget.res.get("table8")[widget.time]["isAvailable"] == false)? null: () {
                 String tabletime = "table8.${widget.time}.isAvailable";
                   updateTablesAvailability(tabletime);
+                  addReservation(widget.restaurantName,widget.time,"8");
               },
               icon: Icon(Icons.food_bank_outlined, color: (widget.res.get("table8")[widget.time]["isAvailable"] == true)? Colors.blue:Colors.red),
               iconSize: 100,
@@ -456,16 +466,37 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
 
 //change availability of table
   updateTablesAvailability (String tableTime) async{
+    print("---------------");
     await widget.FBinstance
       .get()
       .then((value){
-        var selectedid = value.docs[0].id;
+        var selectedId = value.docs[0].id;
         FirebaseFirestore.instance
           .collection("restaurant")
-          .doc(selectedid)
+          .doc(selectedId)
           .update({tableTime: false})
-          .then((value) => print('success'));
+          .then((value) => print('Table availablility updated'));
       }
     );
+  }
+
+   addReservation(String RestaurantName, String time, String tableNumber) async {
+    List<Map<String, dynamic>> record = await DBHelper.dbHelper.getAllInfo();
+    String email = record[0]["email"];
+    await FirebaseFirestore.instance
+        .collection("users")
+        .where("email", isEqualTo: email)
+        .get()
+        .then((value) {
+      var userId = value.docs[0].id;
+      FirebaseFirestore.instance.collection('users').doc(userId).update({
+        'isReserved': true,
+        'reservation': {
+          'restarauntName': '$RestaurantName',
+          'tableNumber': '$tableNumber',
+          'reservationTime': '$time'
+        }
+      }).then((value) => print("Table reserved"));
+    });
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:restaraunt_app/homepage.dart';
+import 'package:restaraunt_app/login.dart';
 
 class register extends StatelessWidget {
   CollectionReference? usersRef;
@@ -167,7 +169,7 @@ class _registerForm extends State<registerForm> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => register()));
+                                builder: (context) => login()));
                       },
                       child: Text("Register"))
                 ],
@@ -186,6 +188,13 @@ class _registerForm extends State<registerForm> {
       'province': "Ontario",
       'phoneNumber': phoneNumberController.text,
       'profilePic': "empty",
+      'isInQueue' : false,
+      'isReserved': false,
+      'reservation':{
+        'restarauntName': 'empty',
+        'tableNumber' : 'empty',
+        'reservationTime' : 'empty'
+      }
     });
   }
 }
