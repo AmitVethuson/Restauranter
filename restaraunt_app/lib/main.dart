@@ -57,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => HomePage()));
+                      context, MaterialPageRoute(builder: (context) => login()));
                 },
                 child: const Text("Login", style:TextStyle(fontFamily: "Sora", color: Colors.black)),
                 style: ElevatedButton.styleFrom(
