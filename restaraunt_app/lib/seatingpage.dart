@@ -30,7 +30,7 @@ class _SeatingPageState extends State<SeatingPage> {
                   timerselector(context);
                 },
                 icon: Icon(Icons.timer)),
-                 Text("${timeFormat(selectedTime)}" ),
+            Text("${timeFormat(selectedTime)}" ),
           ]))
         ],
       ),
