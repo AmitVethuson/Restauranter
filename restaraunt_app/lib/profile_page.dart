@@ -42,7 +42,8 @@ class _ProfilePageState extends State<ProfilePage>
                 Padding(
                     padding: EdgeInsets.only(left: 20.0, top: 20.0),
                     child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      //the is a temp comment out
+                      // crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Padding(
@@ -54,6 +55,16 @@ class _ProfilePageState extends State<ProfilePage>
                                       fontSize: 20.0,
                                       fontFamily: 'sans-serif-light',
                                       color: Colors.black))),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 25.0),
+                          child: Center(
+                              child: ElevatedButton(
+                                  onPressed: () {
+                                    _DisplayReservations(context, info[3]);
+                                    // print(info[3]);
+                                  },
+                                  child: Icon(Icons.restaurant))),
                         )
                       ],
                     )),
@@ -85,7 +96,7 @@ class _ProfilePageState extends State<ProfilePage>
           Container(
               color: Color(0xffFFFFFF),
               child: ElevatedButton(
-                  onPressed: () async{
+                  onPressed: () async {
                     int re = await DBHelper.dbHelper.delete(info[4]);
 
                     Navigator.pop(context);
@@ -315,5 +326,179 @@ class _ProfilePageState extends State<ProfilePage>
     //     info = info1;
     //   });
     // });
+  }
+
+//reservation display
+  _DisplayReservations(BuildContext context, String email) async {
+    QuerySnapshot User = await FirebaseFirestore.instance
+        .collection("users")
+        .where("email", isEqualTo: email)
+        .get();
+    QueryDocumentSnapshot doc = User.docs[0];
+    Map<String, dynamic> reservationINFO = doc["reservation"];
+    String restarauntName = reservationINFO["restarauntName"];
+    String reservationTime = reservationINFO["reservationTime"];
+    String tableNumber = reservationINFO["tableNumber"];
+    //check if reservation is placed
+    if (restarauntName == "empty") {
+      return showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Current Reservations"),
+              content: Text("No reservations are placed"),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      return Navigator.pop(context);
+                    },
+                    child: Text("OK")),
+              ],
+            );
+          });
+    } else {
+      //display reservation time
+      return showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Current Reservations"),
+              content: Text(
+                  "Your Current Reservation is $restarauntName at ${timeFormat(reservationTime)} at Table $tableNumber"),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      return Navigator.pop(context);
+                    },
+                    child: Text("OK")),
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      return _cancelReservation(context, email,restarauntName,reservationTime,tableNumber);
+                    },
+                    child: Text("Cancel Reservation")),
+              ],
+            );
+          });
+    }
+  }
+
+//cancel reservation prompt
+  _cancelReservation(BuildContext context, String email, String restaruantName, String ReservationTime, String tablenumber) async {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          //get table time
+          String tabletime = "table$tablenumber.$ReservationTime.isAvailable";
+          return AlertDialog(
+            title: Text("Cancel Reservations"),
+            content: Text("Are you sure you want to cancel reservation"),
+            actions: [
+              TextButton(
+                  onPressed: () async {
+
+                    //change user reservation
+                    await FirebaseFirestore.instance.collection("users").where("email", isEqualTo: email).get()
+                      .then((value) {
+                      var userId = value.docs[0].id;
+                      FirebaseFirestore.instance.collection('users').doc(userId)
+                        .update({
+                        'isReserved': false,
+                        'reservation': {
+                          'restarauntName': 'empty',
+                          'tableNumber': 'empty',
+                          'reservationTime': 'empty'
+                        }
+                      }).then((value) =>
+                              print("Reservation has been Cancelled"));
+                    });
+
+                    //update restaurant information
+                    await FirebaseFirestore.instance.collection("restaurant").where("name", isEqualTo: restaruantName).get()
+                    .then((value) {
+                      var userId = value.docs[0].id;
+                      FirebaseFirestore.instance.collection('restaurant').doc(userId).update({tabletime: true})
+                      .then((value) =>
+                              print("Reservation has been Cancelled"));
+                    });
+                    return Navigator.pop(context);
+                  },
+                  child: Text("Yes, Cancel Reservation")),
+                  
+              TextButton(
+                  onPressed: () {
+                    return Navigator.pop(context);
+                  },
+                  child: Text("No, Do not cancel Reservation")),
+            ],
+          );
+        });
+  }
+
+//time formater
+  timeFormat(String time) {
+    switch (time) {
+      case "12":
+        {
+          time = "12:00pm";
+        }
+        break;
+      case "13":
+        {
+          time = "1:00pm";
+        }
+        break;
+      case "14":
+        {
+          time = "2:00pm";
+        }
+        break;
+      case "15":
+        {
+          time = "3:00pm";
+        }
+        break;
+      case "16":
+        {
+          time = "4:00pm";
+        }
+        break;
+      case "17":
+        {
+          time = "5:00pm";
+        }
+        break;
+      case "18":
+        {
+          time = "6:00pm";
+        }
+        break;
+      case "19":
+        {
+          time = "7:00pm";
+        }
+        break;
+      case "20":
+        {
+          time = "8:00pm";
+        }
+        break;
+      case "21":
+        {
+          time = "9:00pm";
+        }
+        break;
+      case "22":
+        {
+          time = "10:00pm";
+        }
+        break;
+      case "23":
+        {
+          time = "11:00pm";
+        }
+        break;
+    }
+    return time;
   }
 }
