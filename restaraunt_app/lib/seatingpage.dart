@@ -389,11 +389,8 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
                   : () async{
                       String tabletime = "table1.${widget.time}.isAvailable";
                       //check if reservations were already made
-
                       if (await checkReservationStatus() == false) {
-                        updateTablesAvailability(tabletime);
-                        addReservation(widget.restaurantName, widget.time, "1");
-                        
+                        addReservation(widget.restaurantName, widget.time, "1",tabletime);
                       } else {
                         _errorReservationPrompt(context);
                       }
@@ -421,10 +418,8 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
                   : () async{
                       String tabletime = "table2.${widget.time}.isAvailable";
                       //check if reservations were already made
-                     
                       if (await checkReservationStatus()  == false) {
-                        updateTablesAvailability(tabletime);
-                        addReservation(widget.restaurantName, widget.time, "2");
+                        addReservation(widget.restaurantName, widget.time, "2",tabletime);
                       } else {
                         _errorReservationPrompt(context);
                       }
@@ -453,8 +448,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
                       String tabletime = "table3.${widget.time}.isAvailable";
                       //check if reservations were already made
                       if (await checkReservationStatus()  == false) {
-                        updateTablesAvailability(tabletime);
-                        addReservation(widget.restaurantName, widget.time, "3");
+                        addReservation(widget.restaurantName, widget.time, "3", tabletime);
                       } else {
                         _errorReservationPrompt(context);
                       }
@@ -483,8 +477,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
                       String tabletime = "table4.${widget.time}.isAvailable";
                       //check if reservations were already made
                       if (await checkReservationStatus()  == false) {
-                        updateTablesAvailability(tabletime);
-                        addReservation(widget.restaurantName, widget.time, "4");
+                        addReservation(widget.restaurantName, widget.time, "4", tabletime);
                       } else {
                         _errorReservationPrompt(context);
                       }
@@ -513,8 +506,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
                       String tabletime = "table5.${widget.time}.isAvailable";
                       //check if reservations were already made
                       if (await checkReservationStatus()  == false) {
-                        updateTablesAvailability(tabletime);
-                        addReservation(widget.restaurantName, widget.time, "5");
+                        addReservation(widget.restaurantName, widget.time, "5", tabletime);
                       } else {
                         _errorReservationPrompt(context);
                       }
@@ -542,11 +534,8 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
                   : () async {
                       String tabletime = "table6.${widget.time}.isAvailable";
                       //check if reservations were already made
-                      // checkReservationStatus();
-                      // print( await checkReservationStatus());
                       if (await checkReservationStatus() == false) {
-                        updateTablesAvailability(tabletime);
-                        addReservation(widget.restaurantName, widget.time, "6");
+                        addReservation(widget.restaurantName, widget.time, "6", tabletime);
                       } else {
                         _errorReservationPrompt(context);
                       }
@@ -575,8 +564,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
                       String tabletime = "table7.${widget.time}.isAvailable";
                       //check if reservations were already made
                       if (await checkReservationStatus()== false) {
-                        updateTablesAvailability(tabletime);
-                        addReservation(widget.restaurantName, widget.time, "7");
+                        addReservation(widget.restaurantName, widget.time, "7", tabletime);
                       } else {
                         _errorReservationPrompt(context);
                       }
@@ -605,8 +593,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
                       String tabletime = "table8.${widget.time}.isAvailable";
                       //check if reservations were already made
                       if (await checkReservationStatus()  == false) {
-                        updateTablesAvailability(tabletime);
-                        addReservation(widget.restaurantName, widget.time, "8");
+                        addReservation(widget.restaurantName, widget.time, "8", tabletime);
                       } else {
                         _errorReservationPrompt(context);
                       }
@@ -626,7 +613,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
     );
   }
 
-//change availability of table
+//change availability of table to false (aka taken)
   updateTablesAvailability(String tableTime) async {
     print("---------------");
     await widget.FBinstance.get().then((value) {
@@ -639,13 +626,14 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
     });
   }
 
+  //shows error dialog when user tries to book a second reservation
   _errorReservationPrompt(BuildContext context) {
     return showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text("Reservation Error"),
-            content: Text("You already made a reservation"),
+            content: Text("You already have a reservation"),
             actions: [
               TextButton(
                   onPressed: () {
@@ -657,7 +645,6 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
         });
   }
 
-  
 //check if user reservation status
   checkReservationStatus() async {
     bool reservationStatus = true;
@@ -673,24 +660,49 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
     return reservationStatus;
   }
 
-//add reservation details to user account
-  addReservation(String RestaurantName, String time, String tableNumber) async {
+  //add reservation details to user account, and calls updateTablesAvailability
+  addReservation(String RestaurantName, String time, String tableNumber, String tabletime) async {
     List<Map<String, dynamic>> record = await DBHelper.dbHelper.getAllInfo();
     String email = record[0]["email"];
-    await FirebaseFirestore.instance
-        .collection("users")
-        .where("email", isEqualTo: email)
-        .get()
-        .then((value) {
-      var userId = value.docs[0].id;
-      FirebaseFirestore.instance.collection('users').doc(userId).update({
-        'isReserved': true,
-        'reservation': {
-          'restarauntName': '$RestaurantName',
-          'tableNumber': '$tableNumber',
-          'reservationTime': '$time'
-        }
-      }).then((value) => print("Table reserved"));
-    });
+    return showDialog(
+      context: context, 
+      builder: (BuildContext context){
+        return AlertDialog(
+          title: Text("Confirm"),
+          content: Text("Are yousure you want to book Table${tableNumber} at ${int.parse(time) - 12}pm?"),
+          actions: [
+            TextButton(
+              onPressed: (){
+                return Navigator.pop(context);
+              },
+              child: Text("Cancel")
+            ),
+            TextButton(
+              onPressed: () async{
+                await FirebaseFirestore.instance
+                  .collection("users")
+                  .where("email", isEqualTo: email)
+                  .get()
+                  .then((value) {
+                    var userId = value.docs[0].id;
+                    FirebaseFirestore.instance.collection('users').doc(userId).update({
+                      'isReserved': true,
+                      'reservation': {
+                        'restarauntName': '$RestaurantName',
+                        'tableNumber': '$tableNumber',
+                        'reservationTime': '$time'
+                      }
+                }).then((value) => print("Table reserved"));
+                });
+                updateTablesAvailability(tabletime);
+                return Navigator.pop(context);
+              }, 
+              child: Text("Confirm")
+            ),
+          ],
+        );
+      }
+    );
   }
+
 }
