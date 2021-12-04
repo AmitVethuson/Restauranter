@@ -3,7 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'db_helper.dart';
 import 'main.dart';
-
+import 'timeformat.dart';
+import 'notification.dart';
 void main() async {
   print("test");
 }
@@ -339,6 +340,7 @@ class _ProfilePageState extends State<ProfilePage>
     String restarauntName = reservationINFO["restarauntName"];
     String reservationTime = reservationINFO["reservationTime"];
     String tableNumber = reservationINFO["tableNumber"];
+
     //check if reservation is placed
     if (restarauntName == "empty") {
       return showDialog(
@@ -364,7 +366,7 @@ class _ProfilePageState extends State<ProfilePage>
             return AlertDialog(
               title: Text("Current Reservations"),
               content: Text(
-                  "Your Current Reservation is $restarauntName at ${timeFormat(reservationTime)} at Table $tableNumber"),
+                  "Your Current Reservation is $restarauntName at ${formatTime().timeFormat(reservationTime)} at Table $tableNumber"),
               actions: [
                 TextButton(
                     onPressed: () {
@@ -436,69 +438,5 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
 //time formater
-  timeFormat(String time) {
-    switch (time) {
-      case "12":
-        {
-          time = "12:00pm";
-        }
-        break;
-      case "13":
-        {
-          time = "1:00pm";
-        }
-        break;
-      case "14":
-        {
-          time = "2:00pm";
-        }
-        break;
-      case "15":
-        {
-          time = "3:00pm";
-        }
-        break;
-      case "16":
-        {
-          time = "4:00pm";
-        }
-        break;
-      case "17":
-        {
-          time = "5:00pm";
-        }
-        break;
-      case "18":
-        {
-          time = "6:00pm";
-        }
-        break;
-      case "19":
-        {
-          time = "7:00pm";
-        }
-        break;
-      case "20":
-        {
-          time = "8:00pm";
-        }
-        break;
-      case "21":
-        {
-          time = "9:00pm";
-        }
-        break;
-      case "22":
-        {
-          time = "10:00pm";
-        }
-        break;
-      case "23":
-        {
-          time = "11:00pm";
-        }
-        break;
-    }
-    return time;
-  }
+  
 }

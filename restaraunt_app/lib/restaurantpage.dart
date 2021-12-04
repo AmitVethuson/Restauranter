@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'seatingpage.dart';
 import 'restaurant_model.dart';
 
+
 //resturant page
 class RestaurantPage extends StatefulWidget {
   const RestaurantPage({Key? key, required this.currentrestaurant})
@@ -207,7 +208,7 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
                 children: [
                   ElevatedButton(
                       onPressed: () {
-                        print("menu");
+                    
                       },
                       child: Text("Menu"),
                       style: ElevatedButton.styleFrom(

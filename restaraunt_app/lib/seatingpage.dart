@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'db_helper.dart';
+import 'notification.dart';
+import 'timeformat.dart';
 
 class SeatingPage extends StatefulWidget {
   const SeatingPage({Key? key, required this.restaurantName}) : super(key: key);
@@ -30,7 +32,7 @@ class _SeatingPageState extends State<SeatingPage> {
                       timerselector(context);
                     },
                     icon: Icon(Icons.timer)),
-                Text("${timeFormat(selectedTime)}"),
+                Text("${formatTime().timeFormat(selectedTime)}"),
               ]))
         ],
       ),
@@ -56,71 +58,7 @@ class _SeatingPageState extends State<SeatingPage> {
   }
 
 //format times from 24 time to 12 hour time
-  timeFormat(String time) {
-    switch (time) {
-      case "12":
-        {
-          time = "12:00pm";
-        }
-        break;
-      case "13":
-        {
-          time = "1:00pm";
-        }
-        break;
-      case "14":
-        {
-          time = "2:00pm";
-        }
-        break;
-      case "15":
-        {
-          time = "3:00pm";
-        }
-        break;
-      case "16":
-        {
-          time = "4:00pm";
-        }
-        break;
-      case "17":
-        {
-          time = "5:00pm";
-        }
-        break;
-      case "18":
-        {
-          time = "6:00pm";
-        }
-        break;
-      case "19":
-        {
-          time = "7:00pm";
-        }
-        break;
-      case "20":
-        {
-          time = "8:00pm";
-        }
-        break;
-      case "21":
-        {
-          time = "9:00pm";
-        }
-        break;
-      case "22":
-        {
-          time = "10:00pm";
-        }
-        break;
-      case "23":
-        {
-          time = "11:00pm";
-        }
-        break;
-    }
-    return time;
-  }
+ 
 
 //time selector
   timerselector(BuildContext context) {
@@ -679,6 +617,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
             ),
             TextButton(
               onPressed: () async{
+                MyNotification(context).showNotification(int.parse(widget.time),RestaurantName,time);
                 await FirebaseFirestore.instance
                   .collection("users")
                   .where("email", isEqualTo: email)
