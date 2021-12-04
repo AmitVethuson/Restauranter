@@ -2,13 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'seatingpage.dart';
 import 'restaurant_model.dart';
-
+import 'menu_page.dart';
 
 //resturant page
 class RestaurantPage extends StatefulWidget {
   const RestaurantPage({Key? key, required this.currentrestaurant})
       : super(key: key);
-  
+
   final RestaurantModel currentrestaurant;
   @override
   State<RestaurantPage> createState() => _RestaurantPageState();
@@ -133,7 +133,10 @@ class _RestaurantInfoState extends State<RestaurantInfo> {
                       }
                       final result = snapshot.data!.docs[0]["wait_time"];
 
-                      var time = (result ~/ 60).toString() +'h ' +(result % 60).toString() +'min ';
+                      var time = (result ~/ 60).toString() +
+                          'h ' +
+                          (result % 60).toString() +
+                          'min ';
                       print(time);
                       return Text('${time}');
                     }),
@@ -169,7 +172,8 @@ class RestarauntPageContent extends StatefulWidget {
 }
 
 class _RestarauntPageContentState extends State<RestarauntPageContent> {
-  MaterialStateProperty<Color> color = MaterialStateProperty.all<Color>(Colors.green);
+  MaterialStateProperty<Color> color =
+      MaterialStateProperty.all<Color>(Colors.green);
   bool isDisabled = true;
   @override
   Widget build(BuildContext context) {
@@ -184,9 +188,11 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
           description(),
           SizedBox(height: 10),
           ElevatedButton.icon(
-              onPressed: (isDisabled == false)? null: () {
+              onPressed: (isDisabled == false)
+                  ? null
+                  : () {
                       updateQueue(widget.restaurantInformation.name);
-                      setState(() {   
+                      setState(() {
                         color = MaterialStateProperty.all<Color>(Colors.red);
                         isDisabled = !isDisabled;
                       });
@@ -207,7 +213,8 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
                 children: [
                   ElevatedButton(
                       onPressed: () {
-                    
+                        //Navigator.push(
+                        //context, MaterialPageRoute(builder: (context) => MenuPage(restaurantName: widget.restaurantInformation.name,currentTime: "${now+1}",)));
                       },
                       child: Text("Menu"),
                       style: ElevatedButton.styleFrom(
@@ -236,10 +243,18 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
                         int now = DateTime.now().hour;
 
                         //allow the ability to book restaurant prior to open time
-                        if(now <12){now = 11;}
+                        if (now < 12) {
+                          now = 11;
+                        }
                         //display seating page
-                         Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => SeatingPage(restaurantName: widget.restaurantInformation.name,currentTime: "${now+1}",)));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SeatingPage(
+                                      restaurantName:
+                                          widget.restaurantInformation.name,
+                                      currentTime: "${now + 1}",
+                                    )));
                       },
                       child: Text("Seating"),
                       style: ElevatedButton.styleFrom(
