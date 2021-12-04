@@ -17,8 +17,8 @@ class _SeatingPageState extends State<SeatingPage> {
   String id = '';
   @override
   Widget build(BuildContext context) {
-  // getid(widget.restaurantName);
-    var temp = FirebaseFirestore.instance.collection("restaurant").where("name", isEqualTo: widget.restaurantName!);
+    var restaurantInstance = FirebaseFirestore.instance.collection("restaurant").where("name", isEqualTo: widget.restaurantName!);
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Seating"),
@@ -31,6 +31,8 @@ class _SeatingPageState extends State<SeatingPage> {
                       timerselector(context);
                     },
                     icon: Icon(Icons.timer)),
+
+                //shows the earliest table you can book
                 Text("${formatTime().timeFormat(widget.currentTime)}"),
               ]))
         ],
@@ -45,7 +47,7 @@ class _SeatingPageState extends State<SeatingPage> {
             final result = snapshot.data!.docs[0];
             return SeatingPageContent(
               res: result,
-              FBinstance: temp,
+              FBinstance: restaurantInstance,
               time: widget.currentTime,
               restaurantName: widget.restaurantName,
             );
@@ -58,7 +60,7 @@ class _SeatingPageState extends State<SeatingPage> {
 
 //time selector
   timerselector(BuildContext context) {
-    //get current our
+    //get current hour
     var now = DateTime.now().hour;
     return showDialog(
         context: context,
@@ -322,9 +324,6 @@ class SeatingPageContent extends StatefulWidget {
 class _SeatingPageContentState extends State<SeatingPageContent> {
   @override
   Widget build(BuildContext context) {
-   
-    Color iconColor = Colors.blue;
-
     return GridView.count(
       crossAxisCount: 2,
       padding: EdgeInsets.all(50),
@@ -334,7 +333,8 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
             child: Column(
           children: [
             IconButton(
-              onPressed: (widget.res.get("table1")[widget.time]["isAvailable"] ==false)? null: () async{
+              // makes tables that are already booked not clickable
+              onPressed: (widget.res.get("table1")[widget.time]["isAvailable"] ==false)? null: () async{ 
                       String tabletime = "table1.${widget.time}.isAvailable";
                       //check if reservations were already made
                       if (await checkReservationStatus() == false) {
@@ -344,6 +344,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
                       }
                     },
               icon: Icon(Icons.food_bank_outlined,
+              //sets colour of the icon to red if table is already taken
                   color: (widget.res.get("table1")[widget.time]
                               ["isAvailable"] ==
                           true)
@@ -544,7 +545,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
         });
   }
 
-//check if user reservation status
+//check if user has already reserved a table or not
   checkReservationStatus() async {
     bool reservationStatus = true;
     List<Map<String, dynamic>> record = await DBHelper.dbHelper.getAllInfo();
@@ -559,7 +560,8 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
     return reservationStatus;
   }
 
-  //add reservation details to user account, and calls updateTablesAvailability
+  // Shows an alert dialog asking user to confirm their selection, then adds
+  // reservation details to user account, and calls updateTablesAvailability
   addReservation(String RestaurantName, String time, String tableNumber, String tabletime) async {
     List<Map<String, dynamic>> record = await DBHelper.dbHelper.getAllInfo();
     String email = record[0]["email"];
