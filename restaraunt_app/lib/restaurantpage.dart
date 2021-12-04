@@ -106,7 +106,7 @@ class _RestaurantInfoState extends State<RestaurantInfo> {
               child: Row(
                 children: [
                   Icon(Icons.calendar_today, size: iconSize),
-                  Text("Hours: 11:00 AM - 7:00 PM",
+                  Text("Hours: 12:00 PM - 11:00 PM",
                       style: TextStyle(color: Colors.black, fontSize: 12)),
                 ],
               ),
@@ -233,8 +233,11 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
                 children: [
                   ElevatedButton(
                       onPressed: () {
+                        //get current hour
+                        int now = DateTime.now().hour;
+                        print(now);
                          Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => SeatingPage(restaurantName: widget.restaurantInformation.name)));
+                      context, MaterialPageRoute(builder: (context) => SeatingPage(restaurantName: widget.restaurantInformation.name,currentTime: "${now+1}",)));
                       },
                       child: Text("Seating"),
                       style: ElevatedButton.styleFrom(

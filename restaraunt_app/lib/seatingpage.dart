@@ -4,22 +4,21 @@ import 'db_helper.dart';
 import 'notification.dart';
 import 'timeformat.dart';
 
+
 class SeatingPage extends StatefulWidget {
-  const SeatingPage({Key? key, required this.restaurantName}) : super(key: key);
+  SeatingPage({Key? key, required this.restaurantName,required this.currentTime}) : super(key: key);
   final restaurantName;
+  String currentTime;
   @override
   _SeatingPageState createState() => _SeatingPageState();
 }
 
 class _SeatingPageState extends State<SeatingPage> {
   String id = '';
-  String selectedTime = "12";
   @override
   Widget build(BuildContext context) {
-    // getid(widget.restaurantName);
-    var temp = FirebaseFirestore.instance
-        .collection("restaurant")
-        .where("name", isEqualTo: widget.restaurantName!);
+  // getid(widget.restaurantName);
+    var temp = FirebaseFirestore.instance.collection("restaurant").where("name", isEqualTo: widget.restaurantName!);
     return Scaffold(
       appBar: AppBar(
         title: Text("Seating"),
@@ -32,15 +31,12 @@ class _SeatingPageState extends State<SeatingPage> {
                       timerselector(context);
                     },
                     icon: Icon(Icons.timer)),
-                Text("${formatTime().timeFormat(selectedTime)}"),
+                Text("${formatTime().timeFormat(widget.currentTime)}"),
               ]))
         ],
       ),
       body: StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection("restaurant")
-              .where("name", isEqualTo: widget.restaurantName!)
-              .snapshots(),
+          stream: FirebaseFirestore.instance.collection("restaurant").where("name", isEqualTo: widget.restaurantName!).snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (!snapshot.hasData) {
@@ -50,18 +46,20 @@ class _SeatingPageState extends State<SeatingPage> {
             return SeatingPageContent(
               res: result,
               FBinstance: temp,
-              time: selectedTime,
+              time: widget.currentTime,
               restaurantName: widget.restaurantName,
             );
           }),
     );
   }
 
-//format times from 24 time to 12 hour time
+
  
 
 //time selector
   timerselector(BuildContext context) {
+    //get current our
+    var now = DateTime.now().hour;
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -80,9 +78,10 @@ class _SeatingPageState extends State<SeatingPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
-                        onPressed: () {
+                        //allow button for future avalible times
+                        onPressed:(12<=now)? null:  () {
                           setState(() {
-                            selectedTime = '12';
+                            widget.currentTime = '12';
                           });
                           return Navigator.pop(context);
                         },
@@ -96,9 +95,10 @@ class _SeatingPageState extends State<SeatingPage> {
                         width: buttonspacer,
                       ),
                       ElevatedButton(
-                        onPressed: () {
+                        //allow button for future avalible times
+                        onPressed: (13<= now)? null:  ()  {
                           setState(() {
-                            selectedTime = '13';
+                            widget.currentTime = '13';
                           });
                           return Navigator.pop(context);
                         },
@@ -114,9 +114,10 @@ class _SeatingPageState extends State<SeatingPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
-                        onPressed: () {
+                        //allow button for future avalible times
+                        onPressed: (14<= now)? null:  () {
                           setState(() {
-                            selectedTime = '14';
+                            widget.currentTime = '14';
                           });
                           return Navigator.pop(context);
                         },
@@ -130,9 +131,10 @@ class _SeatingPageState extends State<SeatingPage> {
                         width: buttonspacer,
                       ),
                       ElevatedButton(
-                        onPressed: () {
+                        //allow button for future avalible times
+                        onPressed: (15<= now)? null:  ()  {
                           setState(() {
-                            selectedTime = '15';
+                            widget.currentTime = '15';
                           });
                           return Navigator.pop(context);
                         },
@@ -148,9 +150,10 @@ class _SeatingPageState extends State<SeatingPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
-                        onPressed: () {
+                        //allow button for future avalible times
+                        onPressed: (16<= now)? null:  ()  {
                           setState(() {
-                            selectedTime = '16';
+                            widget.currentTime = '16';
                           });
                           return Navigator.pop(context);
                         },
@@ -164,9 +167,10 @@ class _SeatingPageState extends State<SeatingPage> {
                         width: buttonspacer,
                       ),
                       ElevatedButton(
-                        onPressed: () {
+                        //allow button for future avalible times
+                        onPressed: (17<=now)? null:  () {
                           setState(() {
-                            selectedTime = '17';
+                            widget.currentTime = '17';
                           });
                           return Navigator.pop(context);
                         },
@@ -182,9 +186,10 @@ class _SeatingPageState extends State<SeatingPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
-                        onPressed: () {
+                        //allow button for future avalible times
+                        onPressed: (18<= now)? null:  ()  {
                           setState(() {
-                            selectedTime = '18';
+                            widget.currentTime = '18';
                           });
                           return Navigator.pop(context);
                         },
@@ -199,9 +204,10 @@ class _SeatingPageState extends State<SeatingPage> {
                         width: buttonspacer,
                       ),
                       ElevatedButton(
-                        onPressed: () {
+                        //allow button for future avalible times
+                        onPressed: (19<= now)? null:  ()  {
                           setState(() {
-                            selectedTime = '19';
+                            widget.currentTime = '19';
                           });
                           return Navigator.pop(context);
                         },
@@ -217,9 +223,12 @@ class _SeatingPageState extends State<SeatingPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
-                        onPressed: () {
+                        //allow button for future avalible times
+                        onPressed: (20<= now)? null:  () {
                           setState(() {
-                            selectedTime = '20';
+                            print("initialtime :${widget.currentTime}");
+                            widget.currentTime = '20';
+                            print("new time: ${widget.currentTime}");
                           });
                           return Navigator.pop(context);
                         },
@@ -233,9 +242,12 @@ class _SeatingPageState extends State<SeatingPage> {
                         width: buttonspacer,
                       ),
                       ElevatedButton(
-                        onPressed: () {
+                        //allow button for future avalible times
+                        onPressed: (21<= now)? null:  () {
                           setState(() {
-                            selectedTime = '21';
+                             print("initialtime :${widget.currentTime}");
+                            widget.currentTime = '21';
+                            print("new time: ${widget.currentTime}");
                           });
                           return Navigator.pop(context);
                         },
@@ -251,9 +263,10 @@ class _SeatingPageState extends State<SeatingPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
-                        onPressed: () {
+                        //allow button for future avalible times
+                        onPressed: (23<= now)? null:  (){
                           setState(() {
-                            selectedTime = '22';
+                            widget.currentTime = '22';
                           });
                           return Navigator.pop(context);
                         },
@@ -267,9 +280,10 @@ class _SeatingPageState extends State<SeatingPage> {
                         width: buttonspacer,
                       ),
                       ElevatedButton(
-                        onPressed: () {
+                        //allow button for future avalible times
+                        onPressed: (23<= now)? null:  () {
                           setState(() {
-                            selectedTime = '23';
+                            widget.currentTime = '23';
                           });
                           return Navigator.pop(context);
                         },
@@ -320,11 +334,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
             child: Column(
           children: [
             IconButton(
-              onPressed: (widget.res.get("table1")[widget.time]
-                          ["isAvailable"] ==
-                      false)
-                  ? null
-                  : () async{
+              onPressed: (widget.res.get("table1")[widget.time]["isAvailable"] ==false)? null: () async{
                       String tabletime = "table1.${widget.time}.isAvailable";
                       //check if reservations were already made
                       if (await checkReservationStatus() == false) {
@@ -349,11 +359,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
             child: Column(
           children: [
             IconButton(
-              onPressed: (widget.res.get("table2")[widget.time]
-                          ["isAvailable"] ==
-                      false)
-                  ? null
-                  : () async{
+              onPressed: (widget.res.get("table2")[widget.time]["isAvailable"] ==false)? null: () async{
                       String tabletime = "table2.${widget.time}.isAvailable";
                       //check if reservations were already made
                       if (await checkReservationStatus()  == false) {
@@ -378,11 +384,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
             child: Column(
           children: [
             IconButton(
-              onPressed: (widget.res.get("table3")[widget.time]
-                          ["isAvailable"] ==
-                      false)
-                  ? null
-                  : () async {
+              onPressed: (widget.res.get("table3")[widget.time]["isAvailable"] ==false)? null: () async {
                       String tabletime = "table3.${widget.time}.isAvailable";
                       //check if reservations were already made
                       if (await checkReservationStatus()  == false) {
@@ -407,11 +409,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
             child: Column(
           children: [
             IconButton(
-              onPressed: (widget.res.get("table4")[widget.time]
-                          ["isAvailable"] ==
-                      false)
-                  ? null
-                  : () async{
+              onPressed: (widget.res.get("table4")[widget.time]["isAvailable"] ==false)? null: () async{
                       String tabletime = "table4.${widget.time}.isAvailable";
                       //check if reservations were already made
                       if (await checkReservationStatus()  == false) {
@@ -421,11 +419,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
                       }
                     },
               icon: Icon(Icons.food_bank_outlined,
-                  color: (widget.res.get("table4")[widget.time]
-                              ["isAvailable"] ==
-                          true)
-                      ? Colors.blue
-                      : Colors.red),
+                  color: (widget.res.get("table4")[widget.time]["isAvailable"] ==true)? Colors.blue: Colors.red),
               iconSize: 100,
             ),
             Text("Table 4")
@@ -436,11 +430,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
             child: Column(
           children: [
             IconButton(
-              onPressed: (widget.res.get("table5")[widget.time]
-                          ["isAvailable"] ==
-                      false)
-                  ? null
-                  : () async{
+              onPressed: (widget.res.get("table5")[widget.time]["isAvailable"] ==false)? null: () async{
                       String tabletime = "table5.${widget.time}.isAvailable";
                       //check if reservations were already made
                       if (await checkReservationStatus()  == false) {
@@ -450,11 +440,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
                       }
                     },
               icon: Icon(Icons.food_bank_outlined,
-                  color: (widget.res.get("table5")[widget.time]
-                              ["isAvailable"] ==
-                          true)
-                      ? Colors.blue
-                      : Colors.red),
+                  color: (widget.res.get("table5")[widget.time]["isAvailable"] ==true)? Colors.blue: Colors.red),
               iconSize: 100,
             ),
             Text("Table 5")
@@ -465,11 +451,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
             child: Column(
           children: [
             IconButton(
-              onPressed: (widget.res.get("table6")[widget.time]
-                          ["isAvailable"] ==
-                      false)
-                  ? null
-                  : () async {
+              onPressed: (widget.res.get("table6")[widget.time]["isAvailable"] ==false)? null: () async {
                       String tabletime = "table6.${widget.time}.isAvailable";
                       //check if reservations were already made
                       if (await checkReservationStatus() == false) {
@@ -479,11 +461,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
                       }
                     },
               icon: Icon(Icons.food_bank_outlined,
-                  color: (widget.res.get("table6")[widget.time]
-                              ["isAvailable"] ==
-                          true)
-                      ? Colors.blue
-                      : Colors.red),
+                  color: (widget.res.get("table6")[widget.time]["isAvailable"] ==true)? Colors.blue: Colors.red),
               iconSize: 100,
             ),
             Text("Table 6")
@@ -494,11 +472,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
             child: Column(
           children: [
             IconButton(
-              onPressed: (widget.res.get("table7")[widget.time]
-                          ["isAvailable"] ==
-                      false)
-                  ? null
-                  : () async{
+              onPressed: (widget.res.get("table7")[widget.time]["isAvailable"] ==false)? null: () async{
                       String tabletime = "table7.${widget.time}.isAvailable";
                       //check if reservations were already made
                       if (await checkReservationStatus()== false) {
@@ -508,11 +482,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
                       }
                     },
               icon: Icon(Icons.food_bank_outlined,
-                  color: (widget.res.get("table7")[widget.time]
-                              ["isAvailable"] ==
-                          true)
-                      ? Colors.blue
-                      : Colors.red),
+                  color: (widget.res.get("table7")[widget.time]["isAvailable"] ==true)? Colors.blue: Colors.red),
               iconSize: 100,
             ),
             Text("Table 7")
@@ -523,11 +493,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
             child: Column(
           children: [
             IconButton(
-              onPressed: (widget.res.get("table8")[widget.time]
-                          ["isAvailable"] ==
-                      false)
-                  ? null
-                  : () async{
+              onPressed: (widget.res.get("table8")[widget.time]["isAvailable"] ==false)? null: () async{
                       String tabletime = "table8.${widget.time}.isAvailable";
                       //check if reservations were already made
                       if (await checkReservationStatus()  == false) {
@@ -537,11 +503,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
                       }
                     },
               icon: Icon(Icons.food_bank_outlined,
-                  color: (widget.res.get("table8")[widget.time]
-                              ["isAvailable"] ==
-                          true)
-                      ? Colors.blue
-                      : Colors.red),
+                  color: (widget.res.get("table8")[widget.time]["isAvailable"] ==true)? Colors.blue: Colors.red),
               iconSize: 100,
             ),
             Text("Table 8")
@@ -553,7 +515,6 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
 
 //change availability of table to false (aka taken)
   updateTablesAvailability(String tableTime) async {
-    print("---------------");
     await widget.FBinstance.get().then((value) {
       var selectedId = value.docs[0].id;
       FirebaseFirestore.instance
