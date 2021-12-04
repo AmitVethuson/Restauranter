@@ -18,6 +18,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
   late RestaurantModel restaurant;
   @override
   Widget build(BuildContext context) {
+    //get current restaurant information
     restaurant = widget.currentrestaurant;
     return Scaffold(
         appBar: AppBar(
@@ -38,6 +39,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
         ));
   }
 
+//update page
   updatePage() {
     setState(() {
       restaurant = widget.currentrestaurant;
@@ -57,6 +59,7 @@ class RestaurantInfo extends StatefulWidget {
 class _RestaurantInfoState extends State<RestaurantInfo> {
   int waittime = 0;
 
+//get queue time when initiated
   @override
   void initState() {
     super.initState();
@@ -65,6 +68,7 @@ class _RestaurantInfoState extends State<RestaurantInfo> {
 
   @override
   Widget build(BuildContext context) {
+    //get restaurant collection
     CollectionReference collectionReference =
         FirebaseFirestore.instance.collection("restaurant");
     double iconSize = 22;
@@ -75,7 +79,7 @@ class _RestaurantInfoState extends State<RestaurantInfo> {
           height: 5,
         ),
 
-        //Location data
+        //Location Display
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -129,10 +133,7 @@ class _RestaurantInfoState extends State<RestaurantInfo> {
                       }
                       final result = snapshot.data!.docs[0]["wait_time"];
 
-                      var time = (result ~/ 60).toString() +
-                          'h ' +
-                          (result % 60).toString() +
-                          'min ';
+                      var time = (result ~/ 60).toString() +'h ' +(result % 60).toString() +'min ';
                       print(time);
                       return Text('${time}');
                     }),
@@ -144,6 +145,7 @@ class _RestaurantInfoState extends State<RestaurantInfo> {
     );
   }
 
+  //get waittime from restaurant in db
   getQueueTime(String restaurantName) async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection("restaurant")
@@ -167,8 +169,7 @@ class RestarauntPageContent extends StatefulWidget {
 }
 
 class _RestarauntPageContentState extends State<RestarauntPageContent> {
-  MaterialStateProperty<Color> color =
-      MaterialStateProperty.all<Color>(Colors.green);
+  MaterialStateProperty<Color> color = MaterialStateProperty.all<Color>(Colors.green);
   bool isDisabled = true;
   @override
   Widget build(BuildContext context) {
@@ -183,9 +184,7 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
           description(),
           SizedBox(height: 10),
           ElevatedButton.icon(
-              onPressed: (isDisabled == false)
-                  ? null
-                  : () {
+              onPressed: (isDisabled == false)? null: () {
                       updateQueue(widget.restaurantInformation.name);
                       setState(() {   
                         color = MaterialStateProperty.all<Color>(Colors.red);
@@ -235,7 +234,10 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
                       onPressed: () {
                         //get current hour
                         int now = DateTime.now().hour;
-                        print(now);
+
+                        //allow the ability to book restaurant prior to open time
+                        if(now <12){now = 11;}
+                        //display seating page
                          Navigator.push(
                       context, MaterialPageRoute(builder: (context) => SeatingPage(restaurantName: widget.restaurantInformation.name,currentTime: "${now+1}",)));
                       },
@@ -256,7 +258,7 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
 //description content
   Widget description() {
     //temp value ----remove after implementing api value
-    String test =
+    String descriptionText =
         " There was a time when he would have embraced the change that was coming. In his youth, he sought adventure and the unknown, but that had been years ago. He wished he could go back and learn to find the excitement that came with change but it was useless. ";
     return Container(
         width: 350,
@@ -284,11 +286,12 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
                     fontWeight: FontWeight.bold,
                     fontSize: 20)),
             //description text
-            Text(test),
+            Text(descriptionText),
           ],
         ));
   }
 
+//update queue value in db
   updateQueue(String restaurantName) async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection("restaurant")
