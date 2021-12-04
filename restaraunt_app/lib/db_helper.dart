@@ -51,4 +51,10 @@ class DBHelper {
     Database db = await database;
     return await db.delete("Information",where: "password=?",whereArgs:[password]);
   }
+
+    Future<void> deleteDB() async {
+    var dbPath = await getDatabasesPath();
+    String path = join(dbPath, 'mydb.db');
+    await deleteDatabase(path);
+  }
 }

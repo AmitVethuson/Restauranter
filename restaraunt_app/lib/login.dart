@@ -37,6 +37,11 @@ class _LoginFormState extends State<LoginForm> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   @override
+  void initState() {
+    // TODO: implement initState
+     DBHelper.dbHelper.deleteDB();
+    super.initState();
+  }
   Widget build(BuildContext context) {
     return Container(
         padding: const EdgeInsets.all(20),

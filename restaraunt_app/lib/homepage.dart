@@ -55,11 +55,14 @@ class _HomePageContentState extends State<HomePageContent> {
             return mainscreen();
           } else {
             return Scaffold(
-                body: Center(
-                    child: LoadingAnimationWidget.fourRotatingDots(
-              size: 250,
-              color: const Color(0xFF1A1A3F),
-            )));
+              body: Center(
+                child: LoadingAnimationWidget.fourRotatingDots(
+                size: 250,
+                color: const Color(0xFFFF9800),
+              )),
+              
+              backgroundColor: const Color(0xFFFFF3E0),
+            );
           }
         });
   }
@@ -108,6 +111,7 @@ class _HomePageContentState extends State<HomePageContent> {
                   )),
           backgroundColor: const Color.fromRGBO(242, 242, 242, 1),
         ) : null,
+        backgroundColor: Color(0xFFFFF3E0),
         body: PageView(
           controller: pageController,
           children: screens,

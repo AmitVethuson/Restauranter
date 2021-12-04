@@ -129,14 +129,19 @@ class _ListViewWidget extends State<ListViewWidget>
 
     data["results"].forEach((item) async {
       String imageref;
+      DetailsResponse? detailsRequest;
+      var address;
       if (item['photos'] == null) {
         imageref = "null";
       } else {
         imageref = item['photos'][0]['photo_reference'].toString();
       }
-      var detailsRequest =
-          await googlePlace.details.get(item['place_id'].toString());
-      var address = detailsRequest!.result!.formattedAddress;
+      detailsRequest = (await googlePlace.details.get(item['place_id']));
+      if (detailsRequest?.result?.formattedAddress == null) {
+        address = null;
+      } else {
+        address = detailsRequest?.result?.formattedAddress;
+      }
       address = (address != null)
           ? address.substring(0, address.indexOf(','))
           : address;
