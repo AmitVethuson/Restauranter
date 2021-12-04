@@ -5,85 +5,95 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_place/google_place.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:http/http.dart' as http;
 import 'restaurantpage.dart';
 import 'restaurant_model.dart';
 
 class ListViewWidget extends StatefulWidget {
-  const ListViewWidget({Key? key}) : super(key: key);
+  const ListViewWidget(
+      {Key? key, required this.position, required this.listType, required this.search})
+      : super(key: key);
+  final Position position;
+  final int listType;
+  final String search;
   @override
   _ListViewWidget createState() => _ListViewWidget();
 }
 
-class _ListViewWidget extends State<ListViewWidget> {
+class _ListViewWidget extends State<ListViewWidget>
+    with AutomaticKeepAliveClientMixin {
   List<double> coordinates = [0.0, 0.0];
-  late Position position;
   static const apiKey = 'AIzaSyCNwihkvZR2bcVS4kcHfwC04j0cCx9-LGg';
-  bool status = false;
-  late LocationPermission _locationPermission;
   GooglePlace googlePlace = GooglePlace(apiKey);
   List<RestaurantModel> restaurants = [];
+  List<RestaurantModel> searchedRestaurant = [];
 
   @override
   void initState() {
     super.initState();
     setState(() {
-      searchNear("pizza");
+      searchNear();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: <Widget>[
-      Padding(padding: EdgeInsets.only(top: 10.0)),
-      Text(
-        "Near Me",
-        style: TextStyle(fontSize: 30, fontFamily: 'Sora'),
-      ),
-      Expanded(child: restaurantlist(context))
-    ]);
+    super.build(context);
+    if (widget.listType == 1) {
+      return Column(children: <Widget>[
+        const Padding(padding: EdgeInsets.only(top: 10.0)),
+        const Text("Near Me",
+            style: TextStyle(fontSize: 30, fontFamily: 'Sora')),
+        Expanded(child: restaurantlist(context, restaurants))
+      ]);
+    } else {
+      searchPlace(widget.search);
+      return Column(children: <Widget>[
+        Expanded(child: restaurantlist(context, searchedRestaurant))
+      ]);
+    }
   }
 
-  Widget restaurantlist(BuildContext context) {
+  Widget restaurantlist(BuildContext context, List<RestaurantModel> places) {
     return ListView.builder(
-        padding: EdgeInsets.only(top: 10),
-        itemCount: restaurants.length,
+        padding: const EdgeInsets.only(top: 10),
+        itemCount: places.length,
         itemBuilder: (BuildContext context, int index) {
-          return createRestaurantCard(index);
+          return createRestaurantCard(index, places);
         });
   }
 
-  Widget createRestaurantCard(int index) {
+  Widget createRestaurantCard(int index, List<RestaurantModel> places) {
     return SizedBox(
         width: 250.0,
         child: GestureDetector(
             child: Card(
                 elevation: 3.0,
-                margin: EdgeInsets.only(left: 30.0, bottom: 15.0, right: 30.0),
+                margin: const EdgeInsets.only(
+                    left: 30.0, bottom: 15.0, right: 30.0),
                 color: Colors.white,
                 child: Row(children: <Widget>[
                   Container(
                     width: 175.0,
                     height: 175.0,
-                    padding: EdgeInsets.only(left: 20.0),
+                    padding: const EdgeInsets.only(left: 20.0),
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Text(restaurants[index].name),
-                          Text(restaurants[index].rating),
-                          Text(restaurants[index].address)
+                          Text(places[index].name),
+                          Text(places[index].rating),
+                          Text(places[index].address)
                         ]),
                   ),
-                  Container(
+                  SizedBox(
                       width: 150.0,
                       height: 175.0,
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
-                            Image.network(restaurants[index].image,
+                            Image.network(places[index].image,
                                 width: 125.0, height: 125.0, fit: BoxFit.cover,
                                 errorBuilder: ((BuildContext context,
                                     Object exception, StackTrace? stackTrace) {
@@ -96,42 +106,18 @@ class _ListViewWidget extends State<ListViewWidget> {
                           ])),
                 ])),
             onTap: () async => {
-                  checkFirestore(restaurants[index].name),
+                  checkFirestore(places[index].name),
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => RestaurantPage(
-                              currentrestaurant: restaurants[index]))),
-                  print(restaurants[index].name),
+                              currentrestaurant: places[index]))),
+                  print(places[index].name),
                 }));
   }
 
-  Future<Position> getLocation() async {
-    status = await Geolocator.isLocationServiceEnabled();
-
-    if (status == false) {
-      await Geolocator.openLocationSettings();
-      return Future.error("Location not enabled");
-    }
-    _locationPermission = await Geolocator.checkPermission();
-    if (_locationPermission == LocationPermission.denied) {
-      _locationPermission = await Geolocator.requestPermission();
-      if (_locationPermission == LocationPermission.denied) {
-        return Future.error('Location currently disabled');
-      }
-    }
-    if (_locationPermission == LocationPermission.deniedForever) {
-      return Future.error('Location service is disabled');
-    }
-    position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.best);
-    return position;
-  }
-
-  Future<void> searchNear(String keyword) async {
-    Position position = await getLocation();
-    coordinates = [position.latitude, position.longitude];
-    getStreetAddress(position);
+  Future<void> searchNear() async {
+    coordinates = [widget.position.latitude, widget.position.longitude];
 
     const baseUrl =
         'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
@@ -149,7 +135,7 @@ class _ListViewWidget extends State<ListViewWidget> {
         imageref = item['photos'][0]['photo_reference'].toString();
       }
       var detailsRequest =
-          await this.googlePlace.details.get(item['place_id'].toString());
+          await googlePlace.details.get(item['place_id'].toString());
       var address = detailsRequest!.result!.formattedAddress;
       address = (address != null)
           ? address.substring(0, address.indexOf(','))
@@ -165,11 +151,41 @@ class _ListViewWidget extends State<ListViewWidget> {
     });
   }
 
-  Future<void> getStreetAddress(Position position) async {
-    List<Placemark> placemark =
-        await placemarkFromCoordinates(position.latitude, position.longitude);
-    Placemark address = placemark[0];
-    print("${address.street} : ${address.locality}");
+  Future<void> searchPlace(String search) async {
+    String url =
+        'https://maps.googleapis.com/maps/api/place/textsearch/json?query=restaurants%$search&key=$apiKey';
+    var response = await http.get(Uri.parse(url));
+    Map<String, dynamic> data =
+        Map<String, dynamic>.from(jsonDecode(response.body));
+
+    data["results"].forEach((item) async {
+      String imageref;
+      DetailsResponse? detailsRequest;
+      var address;
+      if (item['photos'] == null) {
+        imageref = "null";
+      } else {
+        imageref = item['photos'][0]['photo_reference'].toString();
+      }
+
+      detailsRequest = (await googlePlace.details.get(item['place_id']));
+      if (detailsRequest?.result?.formattedAddress == null) {
+        address = null;
+      } else {
+        address = detailsRequest?.result?.formattedAddress;
+      }
+      address = (address != null)
+          ? address
+          : address;
+      if (address != null) {
+        var image =
+            'https://maps.googleapis.com/maps/api/place/photo?photoreference=$imageref&maxwidth=500&maxheight=500&key=$apiKey';
+        setState(() {
+          searchedRestaurant.add(RestaurantModel(
+              item['name'], item['rating'].toString(), address!, image));
+        });
+      }
+    });
   }
 
   checkFirestore(String name) async {
@@ -195,7 +211,6 @@ class _ListViewWidget extends State<ListViewWidget> {
                     '21': {'time': 21, 'isAvailable': true},
                     '22': {'time': 22, 'isAvailable': true},
                     '23': {'time': 23, 'isAvailable': true}
-
                   },
                   'table2': {
                     '12': {'time': 12, 'isAvailable': true},
@@ -210,7 +225,6 @@ class _ListViewWidget extends State<ListViewWidget> {
                     '21': {'time': 21, 'isAvailable': true},
                     '22': {'time': 22, 'isAvailable': true},
                     '23': {'time': 23, 'isAvailable': true}
-
                   },
                   'table3': {
                     '12': {'time': 12, 'isAvailable': true},
@@ -225,7 +239,6 @@ class _ListViewWidget extends State<ListViewWidget> {
                     '21': {'time': 21, 'isAvailable': true},
                     '22': {'time': 22, 'isAvailable': true},
                     '23': {'time': 23, 'isAvailable': true}
-
                   },
                   'table4': {
                     '12': {'time': 12, 'isAvailable': true},
@@ -240,7 +253,6 @@ class _ListViewWidget extends State<ListViewWidget> {
                     '21': {'time': 21, 'isAvailable': true},
                     '22': {'time': 22, 'isAvailable': true},
                     '23': {'time': 23, 'isAvailable': true}
-
                   },
                   'table5': {
                     '12': {'time': 12, 'isAvailable': true},
@@ -255,7 +267,6 @@ class _ListViewWidget extends State<ListViewWidget> {
                     '21': {'time': 21, 'isAvailable': true},
                     '22': {'time': 22, 'isAvailable': true},
                     '23': {'time': 23, 'isAvailable': true}
-
                   },
                   'table6': {
                     '12': {'time': 12, 'isAvailable': true},
@@ -270,7 +281,6 @@ class _ListViewWidget extends State<ListViewWidget> {
                     '21': {'time': 21, 'isAvailable': true},
                     '22': {'time': 22, 'isAvailable': true},
                     '23': {'time': 23, 'isAvailable': true}
-
                   },
                   'table7': {
                     '12': {'time': 12, 'isAvailable': true},
@@ -285,7 +295,6 @@ class _ListViewWidget extends State<ListViewWidget> {
                     '21': {'time': 21, 'isAvailable': true},
                     '22': {'time': 22, 'isAvailable': true},
                     '23': {'time': 23, 'isAvailable': true}
-
                   },
                   'table8': {
                     '12': {'time': 12, 'isAvailable': true},
@@ -300,9 +309,11 @@ class _ListViewWidget extends State<ListViewWidget> {
                     '21': {'time': 21, 'isAvailable': true},
                     '22': {'time': 22, 'isAvailable': true},
                     '23': {'time': 23, 'isAvailable': true}
-
                   },
                 })
             });
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

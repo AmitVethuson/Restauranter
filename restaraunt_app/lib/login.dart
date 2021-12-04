@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:restaraunt_app/homepage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'db_helper.dart';
 
-// @dart=2.9
-class login extends StatelessWidget {
+class Login extends StatelessWidget {
   CollectionReference? usersRef;
 
-  login({Key? key, this.usersRef}) : super(key: key);
+  Login({Key? key, this.usersRef}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Login"),
+        title: const Text("Login"),
       ),
       body: LoginForm(
         usersRef: usersRef,
@@ -41,13 +39,13 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Form(
           key: _formKey,
           child: Column(
             children: [
               //sizedbox for spacing
-              SizedBox(
+              const SizedBox(
                 height: 70,
               ),
 
@@ -56,13 +54,13 @@ class _LoginFormState extends State<LoginForm> {
                 controller: emailController,
                 decoration: InputDecoration(
                     labelText: "Email",
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                     //clear button
                     suffixIcon: IconButton(
                         onPressed: () {
                           emailController.clear();
                         },
-                        icon: Icon(Icons.clear))),
+                        icon: const Icon(Icons.clear))),
                 validator: (value) {
                   if (value == null || value.isEmpty || !value.contains("@")) {
                     return "Incorrect Email";
@@ -72,7 +70,7 @@ class _LoginFormState extends State<LoginForm> {
                 },
               ),
               //sizedbox for spacing
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
 
@@ -88,7 +86,7 @@ class _LoginFormState extends State<LoginForm> {
                         onPressed: () {
                           passwordController.clear();
                         },
-                        icon: Icon(Icons.clear))),
+                        icon: const Icon(Icons.clear))),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "Incorrect";
@@ -99,7 +97,7 @@ class _LoginFormState extends State<LoginForm> {
               ),
 
               //sizedbox for spacing
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
 
@@ -110,7 +108,7 @@ class _LoginFormState extends State<LoginForm> {
                       loginInfo();
                     }
                   },
-                  child: Text("Login"))
+                  child: const Text("Login"))
             ],
           ),
         ));
@@ -146,7 +144,7 @@ class _LoginFormState extends State<LoginForm> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => HomePage()));
+                builder: (context) => const HomePage()));
       } else {
         print("test");
         //if false then add a red text saying something wrong!
@@ -165,14 +163,14 @@ class _LoginFormState extends State<LoginForm> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Incorrect Information"),
-            content: Text("Email or Password is incorrect please try again"),
+            title: const Text("Incorrect Information"),
+            content: const Text("Email or Password is incorrect please try again"),
             actions: [
               TextButton(
                   onPressed: () {
                     return Navigator.pop(context);
                   },
-                  child: Text("Close")),
+                  child: const Text("Close")),
             ],
           );
         });

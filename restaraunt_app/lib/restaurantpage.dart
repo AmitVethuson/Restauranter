@@ -20,16 +20,16 @@ class _RestaurantPageState extends State<RestaurantPage> {
     restaurant = widget.currentrestaurant;
     return Scaffold(
         appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.black),
+          iconTheme: const IconThemeData(color: Colors.black),
           backgroundColor: Colors.transparent,
           elevation: 0.0,
           centerTitle: true,
-          title: Text("${widget.currentrestaurant.name}",
-              style: TextStyle(color: Colors.black, fontSize: 25)),
+          title: Text(widget.currentrestaurant.name,
+              style: const TextStyle(color: Colors.black, fontSize: 25)),
           bottom: PreferredSize(
               child: RestaurantInfo(
                   restaurantInformation: widget.currentrestaurant),
-              preferredSize: Size.fromHeight(50)),
+              preferredSize: const Size.fromHeight(50.0)),
         ),
         body: SingleChildScrollView(
           child: RestarauntPageContent(
@@ -66,11 +66,11 @@ class _RestaurantInfoState extends State<RestaurantInfo> {
   Widget build(BuildContext context) {
     CollectionReference collectionReference =
         FirebaseFirestore.instance.collection("restaurant");
-    double iconSize = 22;
+    double iconSize = 20;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SizedBox(
+        const SizedBox(
           height: 5,
         ),
 
@@ -78,11 +78,11 @@ class _RestaurantInfoState extends State<RestaurantInfo> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.location_on_outlined),
-            Text("${widget.restaurantInformation.address}")
+            const Icon(Icons.location_on_outlined),
+            Text(widget.restaurantInformation.address)
           ],
         ),
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
 
@@ -91,52 +91,47 @@ class _RestaurantInfoState extends State<RestaurantInfo> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             //Rating Data display
-            Container(
-              child: Row(
-                children: [
-                  Icon(Icons.star_border_outlined, size: iconSize),
-                  Text("Rating: ${widget.restaurantInformation.rating}",
-                      style: TextStyle(color: Colors.black, fontSize: 12)),
-                ],
-              ),
+            Row(
+              children: [
+                Icon(Icons.star_border_outlined, size: iconSize),
+                Text("Rating: ${widget.restaurantInformation.rating}",
+                    style: const TextStyle(color: Colors.black, fontSize: 12)),
+              ],
             ),
             //Hours Data Display
-            Container(
-              child: Row(
-                children: [
-                  Icon(Icons.calendar_today, size: iconSize),
-                  Text("Hours: 11:00 AM - 7:00 PM",
-                      style: TextStyle(color: Colors.black, fontSize: 12)),
-                ],
-              ),
+            Row(
+              children: [
+                Icon(Icons.calendar_today, size: iconSize),
+                const Text("Hours: 11:00 AM - 7:00 PM",
+                    style: TextStyle(color: Colors.black, fontSize: 12)),
+              ],
             ),
             //Queue time data display
-            Container(
-                child: Row(
+            Row(
               children: [
-                Icon(Icons.access_time, size: iconSize),
-                StreamBuilder(
-                    stream: FirebaseFirestore.instance
-                        .collection("restaurant")
-                        .where('name',
-                            isEqualTo: widget.restaurantInformation.name)
-                        .snapshots(),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (!snapshot.hasData) {
-                        return Text("Queue Time:0 min");
-                      }
-                      final result = snapshot.data!.docs[0]["wait_time"];
+            Icon(Icons.access_time, size: iconSize),
+            StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection("restaurant")
+                    .where('name',
+                        isEqualTo: widget.restaurantInformation.name)
+                    .snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (!snapshot.hasData) {
+                    return const Text("Queue Time:0 min");
+                  }
+                  final result = snapshot.data!.docs[0]["wait_time"];
 
-                      var time = (result ~/ 60).toString() +
-                          'h ' +
-                          (result % 60).toString() +
-                          'min ';
-                      print(time);
-                      return Text('${time}');
-                    }),
+                  var time = (result ~/ 60).toString() +
+                      'h ' +
+                      (result % 60).toString() +
+                      'min ';
+                  print(time);
+                  return Text(time);
+                }),
               ],
-            ))
+            )
           ],
         )
       ],
@@ -174,13 +169,13 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
     return Center(
       child: Column(
         children: [
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
 
           //restaurant description
           description(),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           ElevatedButton.icon(
               onPressed: (isDisabled == false)
                   ? null
@@ -193,15 +188,15 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
                       print('added');
                     },
               style: ButtonStyle(backgroundColor: color),
-              icon: Icon(Icons.person_add),
-              label: Text('Add to queue')),
+              icon: const Icon(Icons.person_add),
+              label: const Text('Add to queue')),
           //menu button
           Container(
             width: 350,
             height: 150,
             decoration: BoxDecoration(
                 color: Colors.white, border: Border.all(color: Colors.grey)),
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -209,24 +204,24 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
                       onPressed: () {
                         print("menu");
                       },
-                      child: Text("Menu"),
+                      child: const Text("Menu"),
                       style: ElevatedButton.styleFrom(
-                          minimumSize: Size(100, 50), primary: Colors.brown)),
-                  Icon(
+                          minimumSize: const Size(100, 50), primary: Colors.brown)),
+                  const Icon(
                     Icons.menu_book,
                     size: 100,
                   )
                 ]),
           ),
 
-          SizedBox(height: 30),
+          const SizedBox(height: 30),
           //seating button
           Container(
             width: 350,
             height: 150,
             decoration: BoxDecoration(
                 color: Colors.white, border: Border.all(color: Colors.grey)),
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -235,10 +230,10 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
                          Navigator.push(
                       context, MaterialPageRoute(builder: (context) => SeatingPage(restaurantName: widget.restaurantInformation.name)));
                       },
-                      child: Text("Seating"),
+                      child: const Text("Seating"),
                       style: ElevatedButton.styleFrom(
-                          minimumSize: Size(100, 50), primary: Colors.brown)),
-                  Icon(
+                          minimumSize: const Size(100, 50), primary: Colors.brown)),
+                  const Icon(
                     Icons.chair,
                     size: 100,
                   )
@@ -259,22 +254,22 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
         decoration: BoxDecoration(
             color: Colors.white,
             border: Border.all(color: Colors.grey),
-            borderRadius: BorderRadius.all(Radius.circular(20)),
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
             boxShadow: [
               //shadow
               BoxShadow(
                 color: Colors.grey.withOpacity(0.5),
-                offset: Offset(5, 10),
+                offset: const Offset(5, 10),
                 spreadRadius: 1,
                 blurRadius: 5,
               )
             ]),
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             //title
-            Text("Description:",
+            const Text("Description:",
                 style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,

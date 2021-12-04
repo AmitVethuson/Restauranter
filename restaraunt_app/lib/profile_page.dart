@@ -1,12 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'db_helper.dart';
 import 'main.dart';
-
-void main() async {
-  print("test");
-}
 
 class ProfilePage extends StatefulWidget {
   String email = '';
@@ -17,16 +11,17 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   List<String> info = [" ", " ", " ", " ", " ", " "];
 
   @override
   void initState() {
-    // TODO: implement initState
     getAllData();
-
     super.initState();
   }
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
@@ -40,11 +35,11 @@ class _ProfilePageState extends State<ProfilePage>
             child: Column(
               children: <Widget>[
                 Padding(
-                    padding: EdgeInsets.only(left: 20.0, top: 20.0),
+                    padding: const EdgeInsets.only(left: 20.0, top: 20.0),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
+                      children: const <Widget>[
                         Padding(
                           padding: EdgeInsets.only(left: 25.0),
                           child: Center(
@@ -58,7 +53,7 @@ class _ProfilePageState extends State<ProfilePage>
                       ],
                     )),
                 Padding(
-                    padding: EdgeInsets.only(top: 20.0),
+                    padding: const EdgeInsets.only(top: 20.0),
                     child: Stack(fit: StackFit.loose, children: <Widget>[
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -67,7 +62,7 @@ class _ProfilePageState extends State<ProfilePage>
                           Container(
                               width: 140.0,
                               height: 140.0,
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
                                   image: ExactAssetImage(
@@ -83,26 +78,26 @@ class _ProfilePageState extends State<ProfilePage>
             ),
           ),
           Container(
-              color: Color(0xffFFFFFF),
+              color: const Color(0xffFFFFFF),
               child: ElevatedButton(
-                  onPressed: () async{
-                    int re = await DBHelper.dbHelper.delete(info[4]);
+                  onPressed: () async {
+                    // int re = await DBHelper.dbHelper.delete(info[4]);
 
                     Navigator.pop(context);
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => MyApp()));
+                        MaterialPageRoute(builder: (context) => const MyApp()));
                   },
-                  child: Text("Logout"))),
+                  child: const Text("Logout"))),
           Container(
-              color: Color(0xffFFFFFF),
+              color: const Color(0xffFFFFFF),
               child: Padding(
-                padding: EdgeInsets.only(bottom: 25.0),
+                padding: const EdgeInsets.only(bottom: 25.0),
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Padding(
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 25.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -111,7 +106,7 @@ class _ProfilePageState extends State<ProfilePage>
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
+                                children: const <Widget>[
                                   Text(
                                     'Account Information',
                                     style: TextStyle(
@@ -123,7 +118,7 @@ class _ProfilePageState extends State<ProfilePage>
                             ],
                           )),
                       Padding(
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 25.0),
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
@@ -131,7 +126,7 @@ class _ProfilePageState extends State<ProfilePage>
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
+                                children: const <Widget>[
                                   Text(
                                     'Name',
                                     style: TextStyle(
@@ -143,7 +138,7 @@ class _ProfilePageState extends State<ProfilePage>
                             ],
                           )),
                       Padding(
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 2.0),
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
@@ -159,7 +154,7 @@ class _ProfilePageState extends State<ProfilePage>
                             ],
                           )),
                       Padding(
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 25.0),
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
@@ -167,7 +162,7 @@ class _ProfilePageState extends State<ProfilePage>
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
+                                children: const <Widget>[
                                   Text(
                                     'Email Adress',
                                     style: TextStyle(
@@ -179,7 +174,7 @@ class _ProfilePageState extends State<ProfilePage>
                             ],
                           )),
                       Padding(
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 2.0),
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
@@ -194,7 +189,7 @@ class _ProfilePageState extends State<ProfilePage>
                             ],
                           )),
                       Padding(
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 25.0),
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
@@ -202,7 +197,7 @@ class _ProfilePageState extends State<ProfilePage>
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
+                                children: const <Widget>[
                                   Text(
                                     'Phone Number',
                                     style: TextStyle(
@@ -214,7 +209,7 @@ class _ProfilePageState extends State<ProfilePage>
                             ],
                           )),
                       Padding(
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 2.0),
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
@@ -229,12 +224,12 @@ class _ProfilePageState extends State<ProfilePage>
                             ],
                           )),
                       Padding(
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 25.0),
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
+                            children: const <Widget>[
                               Expanded(
                                 child: Text(
                                   'Country',
@@ -256,7 +251,7 @@ class _ProfilePageState extends State<ProfilePage>
                             ],
                           )),
                       Padding(
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 2.0),
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
@@ -264,7 +259,7 @@ class _ProfilePageState extends State<ProfilePage>
                             children: <Widget>[
                               Flexible(
                                 child: Padding(
-                                  padding: EdgeInsets.only(right: 10.0),
+                                  padding: const EdgeInsets.only(right: 10.0),
                                   child: TextField(
                                     readOnly: true,
                                     decoration:
@@ -273,7 +268,7 @@ class _ProfilePageState extends State<ProfilePage>
                                 ),
                                 flex: 2,
                               ),
-                              Flexible(
+                              const Flexible(
                                 child: TextField(
                                   readOnly: true,
                                   decoration:
@@ -297,8 +292,7 @@ class _ProfilePageState extends State<ProfilePage>
 
     info.clear();
     setState(() {
-      record.forEach((element) {
-        print(element);
+      for (var element in record) {
         info.add(element["country"]);
         info.add(element["firstName"]);
         info.add(element["lastName"]);
@@ -306,7 +300,7 @@ class _ProfilePageState extends State<ProfilePage>
         info.add(element["password"]);
         info.add(element["province"]);
         info.add(element["province"]);
-      });
+      }
     });
 
     // setState(() {

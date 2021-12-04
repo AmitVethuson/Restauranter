@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:restaraunt_app/homepage.dart';
 import 'register.dart';
 import 'login.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
@@ -53,29 +52,33 @@ class _MyHomePageState extends State<MyHomePage> {
                 "Restauranter",
                 style: TextStyle(color:Colors.white, fontSize: 50, fontFamily: 'Sora'),
               ),
-              Padding(padding: EdgeInsets.only(bottom: 30.0)),
+
+              const Padding(padding: EdgeInsets.only(bottom: 30.0)),
+              
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => login()));
+                      context, MaterialPageRoute(builder: (context) => Login()));
                 },
                 child: const Text("Login", style:TextStyle(fontFamily: "Sora", color: Colors.black)),
                 style: ElevatedButton.styleFrom(
-                  side: BorderSide(width: 1.0),
+                  side: const BorderSide(width: 1.0),
                   primary: Colors.white,
                   shadowColor: Colors.black,
                   elevation: 2.0
                 )),
-              Padding(padding: EdgeInsets.only(bottom: 10.0)),
+
+              const Padding(padding: EdgeInsets.only(bottom: 10.0)),
+
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => register()));
+                      context, MaterialPageRoute(builder: (context) => Register()));
                 },
                 child: const Text("Register", style:TextStyle(color: Colors.black)),
                 
                 style: ElevatedButton.styleFrom(
-                  side: BorderSide(width: 1.0),
+                  side: const BorderSide(width: 1.0),
                   primary: Colors.white,
                   shadowColor: Colors.black,
                   elevation: 2.0

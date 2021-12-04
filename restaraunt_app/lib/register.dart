@@ -1,33 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 
-class register extends StatelessWidget {
+class Register extends StatelessWidget {
   CollectionReference? usersRef;
-  register({Key? key, this.usersRef}) : super(key: key);
+  Register({Key? key, this.usersRef}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Register"),
+        title: const Text("Register"),
       ),
-      body: registerForm(
+      body: RegisterForm(
         usersRef: usersRef,
       ),
     );
   }
 }
 
-class registerForm extends StatefulWidget {
+class RegisterForm extends StatefulWidget {
   CollectionReference? usersRef;
-  registerForm({Key? key, this.usersRef}) : super(key: key);
+  RegisterForm({Key? key, this.usersRef}) : super(key: key);
 
   @override
-  _registerForm createState() => _registerForm();
+  _RegisterForm createState() => _RegisterForm();
 }
 
-class _registerForm extends State<registerForm> {
+class _RegisterForm extends State<RegisterForm> {
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final emailController = TextEditingController();
@@ -43,18 +42,18 @@ class _registerForm extends State<registerForm> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
         child: Container(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             child: Form(
               key: _formKey,
               child: Column(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 70,
                   ),
                   //email text form
                   TextFormField(
                     controller: firstNameController,
-                    decoration: InputDecoration(labelText: "First Name"),
+                    decoration: const InputDecoration(labelText: "First Name"),
                     validator: (value) {
                       if (value == null ||
                           value.isEmpty ||
@@ -65,12 +64,12 @@ class _registerForm extends State<registerForm> {
                       }
                     },
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
                   TextFormField(
                     controller: lastNameController,
-                    decoration: InputDecoration(labelText: "Last Name"),
+                    decoration: const InputDecoration(labelText: "Last Name"),
                     validator: (value) {
                       if (value == null ||
                           value.isEmpty ||
@@ -81,12 +80,12 @@ class _registerForm extends State<registerForm> {
                       }
                     },
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
                   TextFormField(
                     controller: emailController,
-                    decoration: InputDecoration(labelText: "Email"),
+                    decoration: const InputDecoration(labelText: "Email"),
                     validator: (value) {
                       if (value == null ||
                           value.isEmpty ||
@@ -97,12 +96,12 @@ class _registerForm extends State<registerForm> {
                       }
                     },
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
                   TextFormField(
                     controller: phoneNumberController,
-                    decoration: InputDecoration(labelText: "Phone Number"),
+                    decoration: const InputDecoration(labelText: "Phone Number"),
                     validator: (value) {
                       if (value == null ||
                           value.isEmpty ||
@@ -113,12 +112,12 @@ class _registerForm extends State<registerForm> {
                       }
                     },
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
                   TextFormField(
                     controller: passwordController,
-                    decoration: InputDecoration(labelText: "Password"),
+                    decoration: const InputDecoration(labelText: "Password"),
                     validator: (value) {
                       if (value == null ||
                           value.isEmpty ||
@@ -129,35 +128,35 @@ class _registerForm extends State<registerForm> {
                       }
                     },
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
                   TextFormField(
                     enabled: false,
                     initialValue: 'Canada',
-                    decoration: InputDecoration(labelText: "Country"),
+                    decoration: const InputDecoration(labelText: "Country"),
                     validator: (value) {},
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
                   //password text form
                   TextFormField(
                     enabled: false,
                     initialValue: 'Ontario',
-                    decoration: InputDecoration(labelText: "Province"),
+                    decoration: const InputDecoration(labelText: "Province"),
                     validator: (value) {},
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   TextFormField(
                     enabled: false,
                     initialValue: 'Toronto',
-                    decoration: InputDecoration(labelText: "City"),
+                    decoration: const InputDecoration(labelText: "City"),
                     validator: (value) {},
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   ElevatedButton(
@@ -167,9 +166,9 @@ class _registerForm extends State<registerForm> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => register()));
+                                builder: (context) => Register()));
                       },
-                      child: Text("Register"))
+                      child: const Text("Register"))
                 ],
               ),
             )));

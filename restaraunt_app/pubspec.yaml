@@ -41,6 +41,7 @@ dependencies:
   http: ^0.13.4
   geolocator: ^7.7.1
   geocoding: ^2.0.1
+  loading_animation_widget:
 
 dev_dependencies:
   flutter_test:
