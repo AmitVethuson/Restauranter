@@ -23,7 +23,7 @@ class _SearchPage extends State<SearchPage> with AutomaticKeepAliveClientMixin {
               title: const Align(
                 alignment: Alignment.center,
                 child:Text(
-                  "Near Me",
+                  "Search",
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 30,

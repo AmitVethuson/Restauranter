@@ -26,7 +26,7 @@ class ListViewWidget extends StatefulWidget {
 class _ListViewWidget extends State<ListViewWidget>
     with AutomaticKeepAliveClientMixin {
   List<double> coordinates = [0.0, 0.0];
-  static const apiKey = 'AIzaSyDXhiey2mqCGJq2y5AvDevpPIkreOY5QCg';
+  static const apiKey = 'AIzaSyAGEFJEsEIDKggCpWYsm7POlK9h0PpTNfw';
   GooglePlace googlePlace = GooglePlace(apiKey);
   List<RestaurantModel> restaurants = [];
   List<RestaurantModel> searchedRestaurant = [];
@@ -207,7 +207,7 @@ class _ListViewWidget extends State<ListViewWidget>
       } else {
         hours = detailsRequest?.result?.openingHours?.weekdayText;
       }
-      
+
       address = (address != null)
           ? address.substring(0, address.indexOf(','))
           : address;
