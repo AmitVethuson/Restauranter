@@ -40,13 +40,14 @@ class _RegisterForm extends State<RegisterForm> {
   final cityController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   CollectionReference users = FirebaseFirestore.instance.collection('users');
-
+  
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
         child: Container(
             padding: const EdgeInsets.all(20),
             child: Form(
+              //Text form for registration
               key: _formKey,
               child: Column(
                 children: [
@@ -237,8 +238,9 @@ class _RegisterForm extends State<RegisterForm> {
           );
         });
   }
-
+//register info
   Future<void> registerInfo(CollectionReference users) {
+    //When user registers information will be stored in db
     return users.add({
       'firstName': firstNameController.text,
       'lastName': lastNameController.text,
