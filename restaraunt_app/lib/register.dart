@@ -117,6 +117,7 @@ class _registerForm extends State<registerForm> {
                     height: 15,
                   ),
                   TextFormField(
+                    obscureText: true,
                     controller: passwordController,
                     decoration: InputDecoration(labelText: "Password"),
                     validator: (value) {
@@ -132,6 +133,7 @@ class _registerForm extends State<registerForm> {
                     height: 15,
                   ),
                   TextFormField(
+                    obscureText: true,
                     controller: reEnterPasswordController,
                     decoration: InputDecoration(labelText: "Re-enter Password"),
                     validator: (value) {
