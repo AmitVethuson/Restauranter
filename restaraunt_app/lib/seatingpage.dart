@@ -17,6 +17,7 @@ class _SeatingPageState extends State<SeatingPage> {
   String id = '';
   @override
   Widget build(BuildContext context) {
+    //instance of current restaurant
     var restaurantInstance = FirebaseFirestore.instance.collection("restaurant").where("name", isEqualTo: widget.restaurantName!);
 
     return Scaffold(
@@ -46,7 +47,7 @@ class _SeatingPageState extends State<SeatingPage> {
             }
             final result = snapshot.data!.docs[0];
             return SeatingPageContent(
-              res: result,
+              SnapshotResult: result,
               FBinstance: restaurantInstance,
               time: widget.currentTime,
               restaurantName: widget.restaurantName,
@@ -228,9 +229,7 @@ class _SeatingPageState extends State<SeatingPage> {
                         //allow button for future avalible times
                         onPressed: (20<= now)? null:  () {
                           setState(() {
-                            print("initialtime :${widget.currentTime}");
                             widget.currentTime = '20';
-                            print("new time: ${widget.currentTime}");
                           });
                           return Navigator.pop(context);
                         },
@@ -247,10 +246,8 @@ class _SeatingPageState extends State<SeatingPage> {
                         //allow button for future avalible times
                         onPressed: (21<= now)? null:  () {
                           setState(() {
-                             print("initialtime :${widget.currentTime}");
                             widget.currentTime = '21';
-                            print("new time: ${widget.currentTime}");
-                          });
+                            });
                           return Navigator.pop(context);
                         },
                         child: const Text("9:00 pm"),
@@ -308,12 +305,12 @@ class _SeatingPageState extends State<SeatingPage> {
 class SeatingPageContent extends StatefulWidget {
   SeatingPageContent(
       {Key? key,
-      required this.res,
+      required this.SnapshotResult,
       required this.FBinstance,
       required this.time,
       required this.restaurantName})
       : super(key: key);
-  final res;
+  final SnapshotResult;
   var FBinstance;
   String time;
   String restaurantName;
@@ -334,7 +331,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
           children: [
             IconButton(
               // makes tables that are already booked not clickable
-              onPressed: (widget.res.get("table1")[widget.time]["isAvailable"] ==false)? null: () async{ 
+              onPressed: (widget.SnapshotResult.get("table1")[widget.time]["isAvailable"] ==false)? null: () async{ 
                       String tabletime = "table1.${widget.time}.isAvailable";
                       //check if reservations were already made
                       if (await checkReservationStatus() == false) {
@@ -345,7 +342,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
                     },
               icon: Icon(Icons.food_bank_outlined,
               //sets colour of the icon to red if table is already taken
-                  color: (widget.res.get("table1")[widget.time]
+                  color: (widget.SnapshotResult.get("table1")[widget.time]
                               ["isAvailable"] ==
                           true)
                       ? Colors.blue
@@ -360,7 +357,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
             child: Column(
           children: [
             IconButton(
-              onPressed: (widget.res.get("table2")[widget.time]["isAvailable"] ==false)? null: () async{
+              onPressed: (widget.SnapshotResult.get("table2")[widget.time]["isAvailable"] ==false)? null: () async{
                       String tabletime = "table2.${widget.time}.isAvailable";
                       //check if reservations were already made
                       if (await checkReservationStatus()  == false) {
@@ -370,7 +367,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
                       }
                     },
               icon: Icon(Icons.food_bank_outlined,
-                  color: (widget.res.get("table2")[widget.time]
+                  color: (widget.SnapshotResult.get("table2")[widget.time]
                               ["isAvailable"] ==
                           true)
                       ? Colors.blue
@@ -385,7 +382,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
             child: Column(
           children: [
             IconButton(
-              onPressed: (widget.res.get("table3")[widget.time]["isAvailable"] ==false)? null: () async {
+              onPressed: (widget.SnapshotResult.get("table3")[widget.time]["isAvailable"] ==false)? null: () async {
                       String tabletime = "table3.${widget.time}.isAvailable";
                       //check if reservations were already made
                       if (await checkReservationStatus()  == false) {
@@ -395,7 +392,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
                       }
                     },
               icon: Icon(Icons.food_bank_outlined,
-                  color: (widget.res.get("table3")[widget.time]
+                  color: (widget.SnapshotResult.get("table3")[widget.time]
                               ["isAvailable"] ==
                           true)
                       ? Colors.blue
@@ -410,7 +407,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
             child: Column(
           children: [
             IconButton(
-              onPressed: (widget.res.get("table4")[widget.time]["isAvailable"] ==false)? null: () async{
+              onPressed: (widget.SnapshotResult.get("table4")[widget.time]["isAvailable"] ==false)? null: () async{
                       String tabletime = "table4.${widget.time}.isAvailable";
                       //check if reservations were already made
                       if (await checkReservationStatus()  == false) {
@@ -420,7 +417,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
                       }
                     },
               icon: Icon(Icons.food_bank_outlined,
-                  color: (widget.res.get("table4")[widget.time]["isAvailable"] ==true)? Colors.blue: Colors.red),
+                  color: (widget.SnapshotResult.get("table4")[widget.time]["isAvailable"] ==true)? Colors.blue: Colors.red),
               iconSize: 100,
             ),
             Text("Table 4")
@@ -431,7 +428,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
             child: Column(
           children: [
             IconButton(
-              onPressed: (widget.res.get("table5")[widget.time]["isAvailable"] ==false)? null: () async{
+              onPressed: (widget.SnapshotResult.get("table5")[widget.time]["isAvailable"] ==false)? null: () async{
                       String tabletime = "table5.${widget.time}.isAvailable";
                       //check if reservations were already made
                       if (await checkReservationStatus()  == false) {
@@ -441,7 +438,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
                       }
                     },
               icon: Icon(Icons.food_bank_outlined,
-                  color: (widget.res.get("table5")[widget.time]["isAvailable"] ==true)? Colors.blue: Colors.red),
+                  color: (widget.SnapshotResult.get("table5")[widget.time]["isAvailable"] ==true)? Colors.blue: Colors.red),
               iconSize: 100,
             ),
             const Text("Table 5")
@@ -452,7 +449,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
             child: Column(
           children: [
             IconButton(
-              onPressed: (widget.res.get("table6")[widget.time]["isAvailable"] ==false)? null: () async {
+              onPressed: (widget.SnapshotResult.get("table6")[widget.time]["isAvailable"] ==false)? null: () async {
                       String tabletime = "table6.${widget.time}.isAvailable";
                       //check if reservations were already made
                       if (await checkReservationStatus() == false) {
@@ -462,7 +459,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
                       }
                     },
               icon: Icon(Icons.food_bank_outlined,
-                  color: (widget.res.get("table6")[widget.time]["isAvailable"] ==true)? Colors.blue: Colors.red),
+                  color: (widget.SnapshotResult.get("table6")[widget.time]["isAvailable"] ==true)? Colors.blue: Colors.red),
               iconSize: 100,
             ),
             const Text("Table 6")
@@ -473,7 +470,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
             child: Column(
           children: [
             IconButton(
-              onPressed: (widget.res.get("table7")[widget.time]["isAvailable"] ==false)? null: () async{
+              onPressed: (widget.SnapshotResult.get("table7")[widget.time]["isAvailable"] ==false)? null: () async{
                       String tabletime = "table7.${widget.time}.isAvailable";
                       //check if reservations were already made
                       if (await checkReservationStatus()== false) {
@@ -483,7 +480,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
                       }
                     },
               icon: Icon(Icons.food_bank_outlined,
-                  color: (widget.res.get("table7")[widget.time]["isAvailable"] ==true)? Colors.blue: Colors.red),
+                  color: (widget.SnapshotResult.get("table7")[widget.time]["isAvailable"] ==true)? Colors.blue: Colors.red),
               iconSize: 100,
             ),
             const Text("Table 7")
@@ -494,7 +491,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
             child: Column(
           children: [
             IconButton(
-              onPressed: (widget.res.get("table8")[widget.time]["isAvailable"] ==false)? null: () async{
+              onPressed: (widget.SnapshotResult.get("table8")[widget.time]["isAvailable"] ==false)? null: () async{
                       String tabletime = "table8.${widget.time}.isAvailable";
                       //check if reservations were already made
                       if (await checkReservationStatus()  == false) {
@@ -504,7 +501,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
                       }
                     },
               icon: Icon(Icons.food_bank_outlined,
-                  color: (widget.res.get("table8")[widget.time]["isAvailable"] ==true)? Colors.blue: Colors.red),
+                  color: (widget.SnapshotResult.get("table8")[widget.time]["isAvailable"] ==true)? Colors.blue: Colors.red),
               iconSize: 100,
             ),
             const Text("Table 8")

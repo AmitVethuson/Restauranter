@@ -15,32 +15,24 @@ class MyNotification{
     initNotification();
   }
 
+//initalize notification
   initNotification(){
     tz.initializeTimeZones();
     notification = FlutterLocalNotificationsPlugin();
     AndroidInitializationSettings androidInitializationSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
     InitializationSettings initializationSettings = InitializationSettings(android: androidInitializationSettings);
     notification.initialize(initializationSettings,
-    // onSelectNotification: selectNotification
     );
   }
 
-  // Future<String?> selectNotification(String? payload ) async {
-	//     await showDialog(
-	//         context: context,
-	//         builder: (BuildContext context) => AlertDialog(
-	//               title: Text("Reservation Time"),
-	//               // content: Text("${timeFormat(reservationTime)} at $restaurantName"),
-  //               content: Text("data"),
-	//             ));
-	//   }
 
-   
+  //show notification function 
   Future showNotification(int hour, String restaurant, String reservation)async{
     var androidNotification = AndroidNotificationDetails("channelId", "channelName",priority: Priority.high,importance: Importance.max);
     var notificationDetails = NotificationDetails(android: androidNotification);
+    //get current time
     var now = DateTime.now();
-
+    //if reservation is within the hour show immediately
     if(now.hour == hour-1){
       reservationTime = reservation;
       restaurantName = restaurant;
@@ -51,6 +43,7 @@ class MyNotification{
 	        notificationDetails,
           );
 
+    //if reservation is in the future schedual notification to hour before reservation
     }else if(now.hour < hour){
       reservationTime = reservation;
       restaurantName = restaurant;
@@ -65,8 +58,9 @@ class MyNotification{
 	            UILocalNotificationDateInterpretation.absoluteTime,
 	        androidAllowWhileIdle: true);
 
+    //else do nothing
     }else{
-      print("no Notification");
+      
     }
   }
 
