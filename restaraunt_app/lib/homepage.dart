@@ -98,7 +98,7 @@ class _HomePageContentState extends State<HomePageContent> {
               controller: TextEditingController(text: addressString),
               enabled: false,
               textAlignVertical: TextAlignVertical.bottom,
-              style: const TextStyle(height:0.5, fontSize: 16),
+              style: const TextStyle(height:1, fontSize: 16),
               decoration: const InputDecoration(
                   prefixIcon: Icon(
                     Icons.location_pin,
@@ -115,8 +115,13 @@ class _HomePageContentState extends State<HomePageContent> {
                   )),
           backgroundColor: const Color(0xFFFFF3E0),
           elevation: 0.0,
-        ) : null,
-        backgroundColor: Color(0xFFFFF3E0),
+        ) : PreferredSize (
+              preferredSize: const Size.fromHeight(50.0),
+              child:AppBar(
+                backgroundColor: Colors.transparent,
+                elevation: 0.0
+              )),
+        backgroundColor: const Color(0xFFFFF3E0),
         body: PageView(
           controller: pageController,
           children: screens,

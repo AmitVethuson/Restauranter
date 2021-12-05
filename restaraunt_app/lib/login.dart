@@ -35,12 +35,14 @@ class _LoginFormState extends State<LoginForm> {
   bool? isVerified;
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+
   @override
   void initState() {
-    // TODO: implement initState
-     DBHelper.dbHelper.deleteDB();
+    DBHelper.dbHelper.deleteDB();
     super.initState();
   }
+  
+  @override
   Widget build(BuildContext context) {
     return Container(
         padding: const EdgeInsets.all(20),
@@ -81,7 +83,7 @@ class _LoginFormState extends State<LoginForm> {
               //password text form
               TextFormField(
                 controller: passwordController,
-                obscureText: false,
+                obscureText: true,
                 decoration: InputDecoration(
                     labelText: "Password",
                     border: OutlineInputBorder(),

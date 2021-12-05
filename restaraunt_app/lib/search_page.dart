@@ -20,10 +20,19 @@ class _SearchPage extends State<SearchPage> with AutomaticKeepAliveClientMixin {
         backgroundColor: const Color(0xFFFFF3E0),
         appBar: PreferredSize(
             child: AppBar(
-              elevation: 0.0,
+              title: const Align(
+                alignment: Alignment.center,
+                child:Text(
+                  "Near Me",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 30,
+                    fontFamily: 'Sora')
+                  )),
+                  elevation: 0.0,
               backgroundColor: Colors.transparent,
             ),
-            preferredSize: const Size.fromHeight(25.0)),
+            preferredSize: const Size.fromHeight(50.0)),
         body: Column(
           children: <Widget>[
             Padding(

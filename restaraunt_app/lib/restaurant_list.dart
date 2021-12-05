@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_place/google_place.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'restaurantpage.dart';
@@ -27,7 +26,7 @@ class ListViewWidget extends StatefulWidget {
 class _ListViewWidget extends State<ListViewWidget>
     with AutomaticKeepAliveClientMixin {
   List<double> coordinates = [0.0, 0.0];
-  static const apiKey = 'AIzaSyCNwihkvZR2bcVS4kcHfwC04j0cCx9-LGg';
+  static const apiKey = 'AIzaSyDXhiey2mqCGJq2y5AvDevpPIkreOY5QCg';
   GooglePlace googlePlace = GooglePlace(apiKey);
   List<RestaurantModel> restaurants = [];
   List<RestaurantModel> searchedRestaurant = [];
@@ -58,6 +57,7 @@ class _ListViewWidget extends State<ListViewWidget>
     }
   }
 
+  // Creates a listview of all the restaurants in a specific location
   Widget restaurantlist(BuildContext context, List<RestaurantModel> places) {
     return ListView.builder(
         padding: const EdgeInsets.only(top: 10),
@@ -67,6 +67,7 @@ class _ListViewWidget extends State<ListViewWidget>
         });
   }
 
+  // Generates a card for each restaurant
   Widget createRestaurantCard(int index, List<RestaurantModel> places) {
     int wholeStars = int.parse(places[index].rating![0]);
     int partialStars = (places[index].rating!.length == 1) ? 0 : 1;

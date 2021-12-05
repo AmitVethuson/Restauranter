@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:restaraunt_app/db_helper.dart';
 import 'seatingpage.dart';
 import 'restaurant_model.dart';
 import 'menu_page.dart';
@@ -22,7 +23,6 @@ class _RestaurantPageState extends State<RestaurantPage> {
     restaurant = widget.currentrestaurant;
     return Scaffold(
         backgroundColor: const Color(0xFFFFF3E0),
-
         appBar: AppBar(
           iconTheme: const IconThemeData(color: Colors.black),
           backgroundColor: Colors.transparent,
@@ -71,8 +71,6 @@ class _RestaurantInfoState extends State<RestaurantInfo> {
   @override
   Widget build(BuildContext context) {
     //get restaurant collection
-    CollectionReference collectionReference =
-        FirebaseFirestore.instance.collection("restaurant");
     double iconSize = 22;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -95,51 +93,52 @@ class _RestaurantInfoState extends State<RestaurantInfo> {
 
         //second row
         SizedBox(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children:[
+            child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
             //Rating Data display
-              Row(
-                children: [
-                  Icon(Icons.star_border_outlined, size: iconSize),
-                  Text("Rating: ${widget.restaurantInformation.rating}",
-                      style: const TextStyle(color: Colors.black, fontSize: 13)),
-                ],
-              ),
-              //Hours Data Display
-              Row(
-                children: [
-                  Icon(Icons.calendar_today, size: iconSize),
-                  Text("Hours: 12:00 PM - 11:00 PM",
-                      style: TextStyle(color: Colors.black, fontSize: 12)),
-                ],
-              ),
-              //Queue time data display
-              Row(
-                children: [
-                  Icon(Icons.access_time, size: iconSize),
-                  StreamBuilder(
-                      stream: FirebaseFirestore.instance
-                          .collection("restaurant")
-                          .where('name',
-                              isEqualTo: widget.restaurantInformation.name)
-                          .snapshots(),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<QuerySnapshot> snapshot) {
-                        if (!snapshot.hasData) {
-                          return const Text("Queue Time:0 min");
-                        }
-                        final result = snapshot.data!.docs[0]["wait_time"];
+            Row(
+              children: [
+                Icon(Icons.star_border_outlined, size: iconSize),
+                Text("Rating: ${widget.restaurantInformation.rating}",
+                    style: const TextStyle(color: Colors.black, fontSize: 13)),
+              ],
+            ),
+            //Hours Data Display
+            Row(
+              children: [
+                Icon(Icons.calendar_today, size: iconSize),
+                Text("Hours: 12:00 PM - 11:00 PM",
+                    style: TextStyle(color: Colors.black, fontSize: 12)),
+              ],
+            ),
+            //Queue time data display
+            Row(
+              children: [
+                Icon(Icons.access_time, size: iconSize),
+                StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection("restaurant")
+                        .where('name',
+                            isEqualTo: widget.restaurantInformation.name)
+                        .snapshots(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (!snapshot.hasData) {
+                        return const Text("Queue Time:0 min");
+                      }
+                      final result = snapshot.data!.docs[0]["wait_time"];
 
-                        var time = (result ~/ 60).toString() +
-                            'h ' +
-                            (result % 60).toString() +
-                            'min ';
-                        print(time);
-                        return Text(time,style: TextStyle(color: Colors.black, fontSize: 13));
-                      }),
-                ],
-              )
+                      var time = (result ~/ 60).toString() +
+                          'h ' +
+                          (result % 60).toString() +
+                          'min ';
+                      return Text(time,
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 13));
+                    }),
+              ],
+            )
           ],
         ))
       ],
@@ -170,9 +169,9 @@ class RestarauntPageContent extends StatefulWidget {
 }
 
 class _RestarauntPageContentState extends State<RestarauntPageContent> {
-  MaterialStateProperty<Color> color =
-      MaterialStateProperty.all<Color>(Colors.green);
-  bool isDisabled = true;
+  MaterialStateProperty<Color> enabledColor =
+      MaterialStateProperty.all<Color>(Colors.red);
+  bool isDisabled = false;
 
   @override
   Widget build(BuildContext context) {
@@ -203,7 +202,9 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
                   ElevatedButton(
                       onPressed: () {
                         Navigator.push(
-                        context, MaterialPageRoute(builder: (context) => MenuPage()));
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MenuPage()));
                       },
                       child: const Text("Menu"),
                       style: ElevatedButton.styleFrom(
@@ -268,21 +269,7 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
           ),
 
           const SizedBox(height: 10),
-          
-          ElevatedButton.icon(
-              onPressed: (isDisabled == false)
-                  ? null
-                  : () {
-                      updateQueue(widget.restaurantInformation.name);
-                      setState(() {
-                        color = MaterialStateProperty.all<Color>(Colors.red);
-                        isDisabled = !isDisabled;
-                      });
-                      print('added');
-                    },
-              style: ButtonStyle(backgroundColor: color),
-              icon: const Icon(Icons.person_add),
-              label: const Text('Add to queue')),
+          addToQueueWidget(),
           const SizedBox(height: 10),
 
           storeHoursWidget()
@@ -291,7 +278,7 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
     );
   }
 
-//description content
+  //Widget for the restaurant hours
   Widget storeHoursWidget() {
     return Container(
         width: 350,
@@ -314,43 +301,139 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
           children: [
             //title
             const Padding(
-              padding: EdgeInsets.only(bottom: 5.0),
-              child: Text(
-                "Hours:",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20
-                ))),
-            
-            
+                padding: EdgeInsets.only(bottom: 5.0),
+                child: Text("Hours:",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20))),
+
             //hours text
             (widget.restaurantInformation.hours == null)
                 ? const Text("Hours Not Available")
-                : SizedBox(height: 125.0, child: ListView.builder(
-                    itemCount: widget.restaurantInformation.hours!.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 2.0),
-                        child: Text(
-                          widget.restaurantInformation.hours![index],
-                          textAlign: TextAlign.center
-                        ));
-                    })),
+                : SizedBox(
+                    height: 125.0,
+                    child: ListView.builder(
+                        itemCount: widget.restaurantInformation.hours!.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Padding(
+                              padding: const EdgeInsets.only(bottom: 2.0),
+                              child: Text(
+                                  widget.restaurantInformation.hours![index],
+                                  textAlign: TextAlign.center));
+                        })),
           ],
         ));
   }
 
-//update queue value in db
+  // Add and Remove to/from queue button widget
+  Widget addToQueueWidget() {
+    return FutureBuilder<bool>(
+        future: checkQueueStatus(),
+        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+          if (snapshot.hasData) {
+            return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  const Padding(padding: EdgeInsets.only(left: 5.0)),
+                  ElevatedButton.icon(
+                      onPressed: (isDisabled == true)
+                          ? null
+                          : () async {
+                              if (await checkQueueStatus() == false) {
+                                print('bye');
+
+                                updateQueue(widget.restaurantInformation.name);
+                                updateQueueStatus(true);
+                                checkQueueStatus();
+                              }
+                            },
+                      style: ButtonStyle(backgroundColor: enabledColor),
+                      icon: const Icon(Icons.person_add),
+                      label: const Text('Add to Queue')),
+                  ElevatedButton.icon(
+                      onPressed: (isDisabled == false)
+                          ? null
+                          : () async {
+                              if (await checkQueueStatus() == true) {
+                                updateQueueStatus(false);
+                                checkQueueStatus();
+                              }
+                            },
+                      style: ButtonStyle(backgroundColor: enabledColor),
+                      icon: const Icon(Icons.person_remove),
+                      label: const Text('Remove from Queue')),
+                  const Padding(padding: EdgeInsets.only(right: 5.0)),
+                ]);
+          } else {
+            return const Text("");
+          }
+        });
+  }
+
+//update queue value in firestore
   updateQueue(String restaurantName) async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection("restaurant")
         .where('name', isEqualTo: restaurantName)
         .get();
+
     QueryDocumentSnapshot doc = querySnapshot.docs[0];
     DocumentReference docRef = doc.reference;
     docRef.update({'wait_time': FieldValue.increment(10)});
+  }
 
-    setState(() {});
+  // Removes the person from the queue time
+  removeFromQueue(String restaurantName) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection("restaurant")
+        .where('name', isEqualTo: restaurantName)
+        .get();
+
+    QueryDocumentSnapshot doc = querySnapshot.docs[0];
+    DocumentReference docRef = doc.reference;
+    docRef.update({'wait_time': FieldValue.increment(-10)});
+  }
+
+  // Checks if the user is already in queue
+  Future<bool> checkQueueStatus() async {
+    bool reservationStatus = true;
+    List<Map<String, dynamic>> record = await DBHelper.dbHelper.getAllInfo();
+    String email = record[0]["email"];
+
+    QuerySnapshot a = await FirebaseFirestore.instance
+        .collection("users")
+        .where("email", isEqualTo: email)
+        .get();
+
+    QueryDocumentSnapshot doc = a.docs[0];
+    reservationStatus = doc["isInQueue"];
+    setState(() {
+      isDisabled = reservationStatus;
+    });
+    print("This is $isDisabled");
+
+    return reservationStatus;
+  }
+
+  // Updates the user queue status so that they are not able to enter another
+  // queue until they leave the current queue
+  updateQueueStatus(bool status) async {
+    List<Map<String, dynamic>> record = await DBHelper.dbHelper.getAllInfo();
+    String email = record[0]["email"];
+
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection("users")
+        .where('email', isEqualTo: email)
+        .get();
+
+    QueryDocumentSnapshot doc = querySnapshot.docs[0];
+    DocumentReference docRef = doc.reference;
+    docRef.update({'isInQueue': status});
+    if (status == true) {
+      docRef.update({'inQueueRestaurant': widget.restaurantInformation.name});
+    } else {
+      removeFromQueue(doc['inQueueRestaurant']);
+    }
   }
 }
