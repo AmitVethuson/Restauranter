@@ -119,19 +119,23 @@ class _LoginFormState extends State<LoginForm> {
           ),
         ));
   }
-
+//Login info 
   Future<void> loginInfo() async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection("users")
         .where('email', isEqualTo: emailController.text)
         .get()
         .catchError((error) => print("Failed to add user: $error"));
+    //Checks to see if a response was given(should be =1)
     if (querySnapshot.size != 0) {
       //When the data exists it will return an array of size 1, else
       //it will bring a size of 0 so when we do the below line it will
       //cause an index error which breaks the code.
+      //Information sent from firebase db
       QueryDocumentSnapshot doc = querySnapshot.docs[0];
+      //checks if passwords are correct
       if (doc["password"] == passwordController.text) {
+        //Sends information obtained from Firebase DB to sqflite db with insertUserInfo
         int result = await DBHelper.dbHelper.insertUserInfo({
           "city": doc["city"],
           "country": doc["country"],
@@ -158,7 +162,7 @@ class _LoginFormState extends State<LoginForm> {
       _showAlertDialog(context);
     }
   }
-
+//Alert dialog is meant to show when an incorrect email or password is inputted 
   _showAlertDialog(BuildContext context) {
     return showDialog(
         context: context,
