@@ -213,8 +213,8 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
                 children: [
                   ElevatedButton(
                       onPressed: () {
-                        //Navigator.push(
-                        //context, MaterialPageRoute(builder: (context) => MenuPage(restaurantName: widget.restaurantInformation.name,currentTime: "${now+1}",)));
+                        Navigator.push(
+                        context, MaterialPageRoute(builder: (context) => MenuPage()));
                       },
                       child: Text("Menu"),
                       style: ElevatedButton.styleFrom(

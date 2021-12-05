@@ -35,6 +35,7 @@ class _registerForm extends State<registerForm> {
   final emailController = TextEditingController();
   final phoneNumberController = TextEditingController();
   final passwordController = TextEditingController();
+  final reEnterPasswordController = TextEditingController();
   final countryController = TextEditingController();
   final provinceController = TextEditingController();
   final cityController = TextEditingController();
@@ -59,8 +60,7 @@ class _registerForm extends State<registerForm> {
                     decoration: InputDecoration(labelText: "First Name"),
                     validator: (value) {
                       if (value == null ||
-                          value.isEmpty ||
-                          !value.contains("@")) {
+                          value.isEmpty ) {
                         return "No Input";
                       } else {
                         return null;
@@ -75,8 +75,7 @@ class _registerForm extends State<registerForm> {
                     decoration: InputDecoration(labelText: "Last Name"),
                     validator: (value) {
                       if (value == null ||
-                          value.isEmpty ||
-                          !value.contains("@")) {
+                          value.isEmpty ) {
                         return "No Input";
                       } else {
                         return null;
@@ -92,8 +91,8 @@ class _registerForm extends State<registerForm> {
                     validator: (value) {
                       if (value == null ||
                           value.isEmpty ||
-                          !value.contains("@")) {
-                        return "No Input";
+                          !value.contains("@") || !value.contains(".") ) {
+                        return "Invalid email address";
                       } else {
                         return null;
                       }
@@ -107,9 +106,8 @@ class _registerForm extends State<registerForm> {
                     decoration: InputDecoration(labelText: "Phone Number"),
                     validator: (value) {
                       if (value == null ||
-                          value.isEmpty ||
-                          !value.contains("@")) {
-                        return "No Input";
+                          value.isEmpty || value.length !=10) {
+                        return "Invalid number";
                       } else {
                         return null;
                       }
@@ -123,9 +121,23 @@ class _registerForm extends State<registerForm> {
                     decoration: InputDecoration(labelText: "Password"),
                     validator: (value) {
                       if (value == null ||
-                          value.isEmpty ||
-                          !value.contains("@")) {
-                        return "No Input";
+                          value.isEmpty) {
+                        return "Password is required";
+                      } else {
+                        return null;
+                      }
+                    },
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  TextFormField(
+                    controller: reEnterPasswordController,
+                    decoration: InputDecoration(labelText: "Re-enter Password"),
+                    validator: (value) {
+                      if (value == null ||
+                          value.isEmpty) {
+                        return "Password is required";
                       } else {
                         return null;
                       }
@@ -165,16 +177,38 @@ class _registerForm extends State<registerForm> {
                   ElevatedButton(
                       onPressed: () {
                         print(firstNameController.text);
-                        registerInfo(users);
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => login()));
+                        
+                        if(_formKey.currentState!.validate()){
+                          if(passwordController.text != reEnterPasswordController.text){
+                              _IncorrectPassword(context);
+                          }else{
+                          registerInfo(users);
+                          Navigator.pop(context);
+                          Navigator.push(context,MaterialPageRoute(builder: (context) => login()));
+                        }}
                       },
                       child: Text("Register"))
                 ],
               ),
             )));
+  }
+
+  _IncorrectPassword(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Password dont match"),
+            content: Text("Please make sure the to re-enter the same password."),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    return Navigator.pop(context);
+                  },
+                  child: Text("Close")),
+            ],
+          );
+        });
   }
 
   Future<void> registerInfo(CollectionReference users) {
