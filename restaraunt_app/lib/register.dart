@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:restaraunt_app/homepage.dart';
 import 'package:restaraunt_app/login.dart';
 
 class Register extends StatelessWidget {
@@ -17,6 +15,7 @@ class Register extends StatelessWidget {
       body: RegisterForm(
         usersRef: usersRef,
       ),
+      backgroundColor: const Color(0xFFFFF3E0),
     );
   }
 }
@@ -50,9 +49,6 @@ class _RegisterForm extends State<RegisterForm> {
               key: _formKey,
               child: Column(
                 children: [
-                  const SizedBox(
-                    height: 70,
-                  ),
                   //email text form
                   TextFormField(
                     controller: firstNameController,

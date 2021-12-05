@@ -11,9 +11,8 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Login"),
-      ),
+      backgroundColor: const Color(0xFFFFF3E0),
+      appBar: AppBar(title: const Text("Login")),
       body: LoginForm(
         usersRef: usersRef,
       ),
@@ -125,14 +124,11 @@ class _LoginFormState extends State<LoginForm> {
         .where('email', isEqualTo: emailController.text)
         .get()
         .catchError((error) => print("Failed to add user: $error"));
-    print(querySnapshot.size);
     if (querySnapshot.size != 0) {
       //When the data exists it will return an array of size 1, else
       //it will bring a size of 0 so when we do the below line it will
       //cause an index error which breaks the code.
       QueryDocumentSnapshot doc = querySnapshot.docs[0];
-      print(doc["phoneNumber"]);
-      print("cutaway");
       if (doc["password"] == passwordController.text) {
         int result = await DBHelper.dbHelper.insertUserInfo({
           "city": doc["city"],
@@ -149,14 +145,12 @@ class _LoginFormState extends State<LoginForm> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => const HomePage()));
+                builder: (context) => HomePage()));
       } else {
-        print("test");
         //if false then add a red text saying something wrong!
         _showAlertDialog(context);
       }
     } else {
-      print("test");
       //if false then add a red text saying something wrong!
       status = !status;
       _showAlertDialog(context);

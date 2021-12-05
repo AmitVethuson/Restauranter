@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_place/google_place.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'restaurantpage.dart';
@@ -11,7 +12,10 @@ import 'restaurant_model.dart';
 
 class ListViewWidget extends StatefulWidget {
   const ListViewWidget(
-      {Key? key, required this.position, required this.listType, required this.search})
+      {Key? key,
+      required this.position,
+      required this.listType,
+      required this.search})
       : super(key: key);
   final Position position;
   final int listType;
@@ -64,6 +68,8 @@ class _ListViewWidget extends State<ListViewWidget>
   }
 
   Widget createRestaurantCard(int index, List<RestaurantModel> places) {
+    int wholeStars = int.parse(places[index].rating![0]);
+    int partialStars = (places[index].rating!.length == 1) ? 0 : 1;
     return SizedBox(
         width: 250.0,
         child: GestureDetector(
@@ -79,11 +85,20 @@ class _ListViewWidget extends State<ListViewWidget>
                     padding: const EdgeInsets.only(left: 20.0),
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(places[index].name),
-                          Text(places[index].rating),
-                          Text(places[index].address)
+                          Text(places[index].name,
+                              style: TextStyle(fontSize: 14)),
+                          const Padding(padding: EdgeInsets.only(bottom: 10.0)),
+                          Text(places[index].address),
+                          const Padding(padding: EdgeInsets.only(bottom: 10.0)),
+                          Row(children: [
+                            for (int i = 0; i < wholeStars; i += 1)
+                              const Icon(Icons.star, color: Colors.red),
+                            for (int i = 0; i < partialStars; i += 1)
+                              const Icon(Icons.star_half, color: Colors.red),
+                            Text(places[index].rating.toString())
+                          ])
                         ]),
                   ),
                   SizedBox(
@@ -130,7 +145,7 @@ class _ListViewWidget extends State<ListViewWidget>
     data["results"].forEach((item) async {
       String imageref;
       DetailsResponse? detailsRequest;
-      var address;
+      var address, hours;
       if (item['photos'] == null) {
         imageref = "null";
       } else {
@@ -142,6 +157,12 @@ class _ListViewWidget extends State<ListViewWidget>
       } else {
         address = detailsRequest?.result?.formattedAddress;
       }
+
+      if (detailsRequest?.result?.openingHours?.periods == null) {
+        hours = null;
+      } else {
+        hours = detailsRequest?.result?.openingHours?.weekdayText;
+      }
       address = (address != null)
           ? address.substring(0, address.indexOf(','))
           : address;
@@ -150,7 +171,7 @@ class _ListViewWidget extends State<ListViewWidget>
             'https://maps.googleapis.com/maps/api/place/photo?photoreference=$imageref&maxwidth=500&maxheight=500&key=$apiKey';
         setState(() {
           restaurants.add(RestaurantModel(
-              item['name'], item['rating'].toString(), address!, image));
+              item['name'], item['rating'].toString(), address!, image, hours));
         });
       }
     });
@@ -166,7 +187,7 @@ class _ListViewWidget extends State<ListViewWidget>
     data["results"].forEach((item) async {
       String imageref;
       DetailsResponse? detailsRequest;
-      var address;
+      var address, hours;
       if (item['photos'] == null) {
         imageref = "null";
       } else {
@@ -179,15 +200,22 @@ class _ListViewWidget extends State<ListViewWidget>
       } else {
         address = detailsRequest?.result?.formattedAddress;
       }
+
+      if (detailsRequest?.result?.openingHours?.periods == null) {
+        hours = null;
+      } else {
+        hours = detailsRequest?.result?.openingHours?.weekdayText;
+      }
+      
       address = (address != null)
-          ? address
+          ? address.substring(0, address.indexOf(','))
           : address;
       if (address != null) {
         var image =
             'https://maps.googleapis.com/maps/api/place/photo?photoreference=$imageref&maxwidth=500&maxheight=500&key=$apiKey';
         setState(() {
           searchedRestaurant.add(RestaurantModel(
-              item['name'], item['rating'].toString(), address!, image));
+              item['name'], item['rating'].toString(), address!, image, hours));
         });
       }
     });

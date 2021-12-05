@@ -7,7 +7,7 @@ import 'restaurant_model.dart';
 class RestaurantPage extends StatefulWidget {
   const RestaurantPage({Key? key, required this.currentrestaurant})
       : super(key: key);
-  
+
   final RestaurantModel currentrestaurant;
   @override
   State<RestaurantPage> createState() => _RestaurantPageState();
@@ -19,6 +19,8 @@ class _RestaurantPageState extends State<RestaurantPage> {
   Widget build(BuildContext context) {
     restaurant = widget.currentrestaurant;
     return Scaffold(
+        backgroundColor: const Color(0xFFFFF3E0),
+
         appBar: AppBar(
           iconTheme: const IconThemeData(color: Colors.black),
           backgroundColor: Colors.transparent,
@@ -64,8 +66,6 @@ class _RestaurantInfoState extends State<RestaurantInfo> {
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference collectionReference =
-        FirebaseFirestore.instance.collection("restaurant");
     double iconSize = 20;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -87,53 +87,54 @@ class _RestaurantInfoState extends State<RestaurantInfo> {
         ),
 
         //second row
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
+        SizedBox(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children:[
             //Rating Data display
-            Row(
-              children: [
-                Icon(Icons.star_border_outlined, size: iconSize),
-                Text("Rating: ${widget.restaurantInformation.rating}",
-                    style: const TextStyle(color: Colors.black, fontSize: 12)),
-              ],
-            ),
-            //Hours Data Display
-            Row(
-              children: [
-                Icon(Icons.calendar_today, size: iconSize),
-                const Text("Hours: 11:00 AM - 7:00 PM",
-                    style: TextStyle(color: Colors.black, fontSize: 12)),
-              ],
-            ),
-            //Queue time data display
-            Row(
-              children: [
-            Icon(Icons.access_time, size: iconSize),
-            StreamBuilder(
-                stream: FirebaseFirestore.instance
-                    .collection("restaurant")
-                    .where('name',
-                        isEqualTo: widget.restaurantInformation.name)
-                    .snapshots(),
-                builder: (BuildContext context,
-                    AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (!snapshot.hasData) {
-                    return const Text("Queue Time:0 min");
-                  }
-                  final result = snapshot.data!.docs[0]["wait_time"];
+              Row(
+                children: [
+                  Icon(Icons.star_border_outlined, size: iconSize),
+                  Text("Rating: ${widget.restaurantInformation.rating}",
+                      style: const TextStyle(color: Colors.black, fontSize: 13)),
+                ],
+              ),
+              //Hours Data Display
+              Row(
+                children: [
+                  Icon(Icons.calendar_today, size: iconSize),
+                  const Text("Hours: 11:00 AM - 7:00 PM",
+                      style: TextStyle(color: Colors.black, fontSize: 13)),
+                ],
+              ),
+              //Queue time data display
+              Row(
+                children: [
+                  Icon(Icons.access_time, size: iconSize),
+                  StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection("restaurant")
+                          .where('name',
+                              isEqualTo: widget.restaurantInformation.name)
+                          .snapshots(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (!snapshot.hasData) {
+                          return const Text("Queue Time:0 min");
+                        }
+                        final result = snapshot.data!.docs[0]["wait_time"];
 
-                  var time = (result ~/ 60).toString() +
-                      'h ' +
-                      (result % 60).toString() +
-                      'min ';
-                  print(time);
-                  return Text(time);
-                }),
-              ],
-            )
+                        var time = (result ~/ 60).toString() +
+                            'h ' +
+                            (result % 60).toString() +
+                            'min ';
+                        print(time);
+                        return Text(time,style: TextStyle(color: Colors.black, fontSize: 13));
+                      }),
+                ],
+              )
           ],
-        )
+        ))
       ],
     );
   }
@@ -164,38 +165,30 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
   MaterialStateProperty<Color> color =
       MaterialStateProperty.all<Color>(Colors.green);
   bool isDisabled = true;
+
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Column(
         children: [
-          const SizedBox(
-            height: 10,
-          ),
+          const SizedBox(height: 20),
 
-          //restaurant description
-          description(),
-          const SizedBox(height: 10),
-          ElevatedButton.icon(
-              onPressed: (isDisabled == false)
-                  ? null
-                  : () {
-                      updateQueue(widget.restaurantInformation.name);
-                      setState(() {   
-                        color = MaterialStateProperty.all<Color>(Colors.red);
-                        isDisabled = !isDisabled;
-                      });
-                      print('added');
-                    },
-              style: ButtonStyle(backgroundColor: color),
-              icon: const Icon(Icons.person_add),
-              label: const Text('Add to queue')),
           //menu button
           Container(
             width: 350,
-            height: 150,
             decoration: BoxDecoration(
-                color: Colors.white, border: Border.all(color: Colors.grey)),
+                color: Colors.white,
+                border: Border.all(color: Colors.grey),
+                borderRadius: const BorderRadius.all(Radius.circular(20)),
+                boxShadow: [
+                  //shadow
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    offset: const Offset(5, 5),
+                    spreadRadius: 1,
+                    blurRadius: 5,
+                  )
+                ]),
             padding: const EdgeInsets.all(20),
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -206,7 +199,8 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
                       },
                       child: const Text("Menu"),
                       style: ElevatedButton.styleFrom(
-                          minimumSize: const Size(100, 50), primary: Colors.brown)),
+                          minimumSize: const Size(100, 50),
+                          primary: Colors.brown)),
                   const Icon(
                     Icons.menu_book,
                     size: 100,
@@ -214,41 +208,73 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
                 ]),
           ),
 
-          const SizedBox(height: 30),
+          const SizedBox(height: 20),
           //seating button
           Container(
             width: 350,
-            height: 150,
             decoration: BoxDecoration(
-                color: Colors.white, border: Border.all(color: Colors.grey)),
+                color: Colors.white,
+                border: Border.all(color: Colors.grey),
+                borderRadius: const BorderRadius.all(Radius.circular(20)),
+                boxShadow: [
+                  //shadow
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    offset: const Offset(5, 5),
+                    spreadRadius: 1,
+                    blurRadius: 5,
+                  )
+                ]),
             padding: const EdgeInsets.all(20),
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
                       onPressed: () {
-                         Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => SeatingPage(restaurantName: widget.restaurantInformation.name)));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SeatingPage(
+                                    restaurantName:
+                                        widget.restaurantInformation.name)));
                       },
                       child: const Text("Seating"),
                       style: ElevatedButton.styleFrom(
-                          minimumSize: const Size(100, 50), primary: Colors.brown)),
+                          minimumSize: const Size(100, 50),
+                          primary: Colors.brown)),
                   const Icon(
                     Icons.chair,
                     size: 100,
                   )
                 ]),
           ),
+
+          const SizedBox(height: 10),
+          
+          ElevatedButton.icon(
+              onPressed: (isDisabled == false)
+                  ? null
+                  : () {
+                      updateQueue(widget.restaurantInformation.name);
+                      setState(() {
+                        color = MaterialStateProperty.all<Color>(Colors.red);
+                        isDisabled = !isDisabled;
+                      });
+                      print('added');
+                    },
+              style: ButtonStyle(backgroundColor: color),
+              icon: const Icon(Icons.person_add),
+              label: const Text('Add to queue')),
+          const SizedBox(height: 10),
+
+          storeHoursWidget()
         ],
       ),
     );
   }
 
 //description content
-  Widget description() {
-    //temp value ----remove after implementing api value
-    String test =
-        " There was a time when he would have embraced the change that was coming. In his youth, he sought adventure and the unknown, but that had been years ago. He wished he could go back and learn to find the excitement that came with change but it was useless. ";
+  Widget storeHoursWidget() {
     return Container(
         width: 350,
         decoration: BoxDecoration(
@@ -259,7 +285,7 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
               //shadow
               BoxShadow(
                 color: Colors.grey.withOpacity(0.5),
-                offset: const Offset(5, 10),
+                offset: const Offset(5, 5),
                 spreadRadius: 1,
                 blurRadius: 5,
               )
@@ -269,13 +295,30 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             //title
-            const Text("Description:",
+            const Padding(
+              padding: EdgeInsets.only(bottom: 5.0),
+              child: Text(
+                "Hours:",
                 style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20)),
-            //description text
-            Text(test),
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20
+                ))),
+            
+            
+            //hours text
+            (widget.restaurantInformation.hours == null)
+                ? const Text("Hours Not Available")
+                : SizedBox(height: 125.0, child: ListView.builder(
+                    itemCount: widget.restaurantInformation.hours!.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 2.0),
+                        child: Text(
+                          widget.restaurantInformation.hours![index],
+                          textAlign: TextAlign.center
+                        ));
+                    })),
           ],
         ));
   }

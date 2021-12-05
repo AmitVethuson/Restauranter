@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:restaraunt_app/listview.dart';
+import 'package:restaraunt_app/restaurant_list.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key, required this.position}) : super(key: key);
@@ -17,6 +17,7 @@ class _SearchPage extends State<SearchPage> with AutomaticKeepAliveClientMixin {
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
+        backgroundColor: const Color(0xFFFFF3E0),
         appBar: PreferredSize(
             child: AppBar(
               elevation: 0.0,
@@ -32,7 +33,7 @@ class _SearchPage extends State<SearchPage> with AutomaticKeepAliveClientMixin {
                     textAlignVertical: TextAlignVertical.center,
                     onSubmitted: ((value) => {
                       complete = !complete,
-                      print(complete),
+                      print(value + complete.toString()),
                       if (complete == true) {
                         setState(() {
                           list = ListViewWidget(
@@ -60,22 +61,6 @@ class _SearchPage extends State<SearchPage> with AutomaticKeepAliveClientMixin {
             Expanded(child: list)
           ],
         ));
-  }
-
-  void getList(String search) {
-    print(search + " $complete");
-
-    if (complete == true) {
-      setState(() {
-        list = ListViewWidget(
-            position: widget.position, listType: 2, search: search);
-      });
-    } else {
-      setState(() {
-        list = Column();
-      });
-    }
-    complete = !complete;
   }
 
   @override

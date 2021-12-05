@@ -27,42 +27,24 @@ class _ProfilePageState extends State<ProfilePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Color(0xFFFFF3E0),
         body: ListView(children: <Widget>[
       Column(
         children: <Widget>[
           Container(
             height: 250,
-            color: Colors.white,
             child: Column(
               children: <Widget>[
-                Padding(
-                    padding: const EdgeInsets.only(left: 20.0, top: 20.0),
-                    child: Row(
-                      //the is a temp comment out
-                      // crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.only(left: 25.0),
-                          child: Center(
-                              child: Text('Profile Page',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20.0,
-                                      fontFamily: 'sans-serif-light',
-                                      color: Colors.black))),
+                const Padding(
+                    padding:  EdgeInsets.only(top: 20.0),
+                      child: Center(
+                          child: Text('Profile',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20.0,
+                                  fontFamily: 'sans-serif-light',
+                                  color: Colors.black))),
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 25.0),
-                          child: Center(
-                              child: ElevatedButton(
-                                  onPressed: () {
-                                    _DisplayReservations(context, info[3]);
-                                  },
-                                  child: Icon(Icons.restaurant))),
-                        )
-                      ],
-                    )),
                 Padding(
                     padding: const EdgeInsets.only(top: 20.0),
                     child: Stack(fit: StackFit.loose, children: <Widget>[
@@ -87,20 +69,16 @@ class _ProfilePageState extends State<ProfilePage>
                     ])),
               ],
             ),
-          ),
+          ), 
+          Center(
+                child: ElevatedButton(
+                    onPressed: () {
+                      _displayReservations(context, info[3]);
+                    },
+                    child: const Icon(Icons.restaurant))),
+          
           Container(
-              color: const Color(0xffFFFFFF),
-              child: ElevatedButton(
-                  onPressed: () async {
-                    // int re = await DBHelper.dbHelper.delete(info[4]);
-
-                    Navigator.pop(context);
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => const MyApp()));
-                  },
-                  child: const Text("Logout"))),
-          Container(
-              color: const Color(0xffFFFFFF),
+              color: const Color(0xFFFFF3E0),
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 25.0),
                 child: Column(
@@ -290,7 +268,18 @@ class _ProfilePageState extends State<ProfilePage>
                             ],
                           )),
                     ]),
-              ))
+              )),
+              
+              Container(
+                  color: const Color(0xFFFFF3E0),
+                  padding: const EdgeInsets.only(bottom: 25.0),
+                  child: ElevatedButton(
+                      onPressed: () async {
+                        Navigator.pop(context);
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => MyApp()));
+                      },
+                      child: const Text("Logout"))),
         ],
       ),
     ]));
@@ -313,17 +302,10 @@ class _ProfilePageState extends State<ProfilePage>
         info.add(element["province"]);
       }
     });
-
-    // setState(() {
-    //   record.forEach((element) {
-    //     info1.add(element.toString());
-    //     info = info1;
-    //   });
-    // });
   }
 
 //reservation display
-  _DisplayReservations(BuildContext context, String email) async {
+  _displayReservations(BuildContext context, String email) async {
     QuerySnapshot User = await FirebaseFirestore.instance
         .collection("users")
         .where("email", isEqualTo: email)
@@ -339,8 +321,8 @@ class _ProfilePageState extends State<ProfilePage>
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text("Current Reservations"),
-              content: Text("No reservations are placed"),
+              title: const Text("Current Reservations"),
+              content: const Text("No reservations are placed"),
               actions: [
                 TextButton(
                     onPressed: () {
@@ -356,7 +338,7 @@ class _ProfilePageState extends State<ProfilePage>
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text("Current Reservations"),
+              title: const Text("Current Reservations"),
               content: Text(
                   "Your Current Reservation is $restarauntName at ${timeFormat(reservationTime)} at Table $tableNumber"),
               actions: [
@@ -364,11 +346,12 @@ class _ProfilePageState extends State<ProfilePage>
                     onPressed: () {
                       return Navigator.pop(context);
                     },
-                    child: Text("OK")),
+                    child: const Text("OK")),
                 TextButton(
                     onPressed: () {
                       Navigator.pop(context);
-                      return _cancelReservation(context, email,restarauntName,reservationTime,tableNumber);
+                      return _cancelReservation(context, email, restarauntName,
+                          reservationTime, tableNumber);
                     },
                     child: Text("Cancel Reservation")),
               ],
@@ -378,25 +361,30 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
 //cancel reservation prompt
-  _cancelReservation(BuildContext context, String email, String restaruantName, String ReservationTime, String tablenumber) async {
+  _cancelReservation(BuildContext context, String email, String restaruantName,
+      String ReservationTime, String tablenumber) async {
     return showDialog(
         context: context,
         builder: (BuildContext context) {
           //get table time
           String tabletime = "table$tablenumber.$ReservationTime.isAvailable";
           return AlertDialog(
-            title: Text("Cancel Reservations"),
-            content: Text("Are you sure you want to cancel reservation"),
+            title: const Text("Cancel Reservations"),
+            content: const Text("Are you sure you want to cancel reservation"),
             actions: [
               TextButton(
                   onPressed: () async {
-
                     //change user reservation
-                    await FirebaseFirestore.instance.collection("users").where("email", isEqualTo: email).get()
-                      .then((value) {
+                    await FirebaseFirestore.instance
+                        .collection("users")
+                        .where("email", isEqualTo: email)
+                        .get()
+                        .then((value) {
                       var userId = value.docs[0].id;
-                      FirebaseFirestore.instance.collection('users').doc(userId)
-                        .update({
+                      FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(userId)
+                          .update({
                         'isReserved': false,
                         'reservation': {
                           'restarauntName': 'empty',
@@ -408,22 +396,26 @@ class _ProfilePageState extends State<ProfilePage>
                     });
 
                     //update restaurant information
-                    await FirebaseFirestore.instance.collection("restaurant").where("name", isEqualTo: restaruantName).get()
-                    .then((value) {
+                    await FirebaseFirestore.instance
+                        .collection("restaurant")
+                        .where("name", isEqualTo: restaruantName)
+                        .get()
+                        .then((value) {
                       var userId = value.docs[0].id;
-                      FirebaseFirestore.instance.collection('restaurant').doc(userId).update({tabletime: true})
-                      .then((value) =>
+                      FirebaseFirestore.instance
+                          .collection('restaurant')
+                          .doc(userId)
+                          .update({tabletime: true}).then((value) =>
                               print("Reservation has been Cancelled"));
                     });
                     return Navigator.pop(context);
                   },
-                  child: Text("Yes, Cancel Reservation")),
-                  
+                  child: const Text("Yes, Cancel Reservation")),
               TextButton(
                   onPressed: () {
                     return Navigator.pop(context);
                   },
-                  child: Text("No, Do not cancel Reservation")),
+                  child: const Text("No, Do not cancel Reservation")),
             ],
           );
         });

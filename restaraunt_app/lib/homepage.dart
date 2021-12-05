@@ -4,19 +4,22 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:restaraunt_app/search_page.dart';
-import 'listview.dart';
+import 'restaurant_list.dart';
 import 'profile_page.dart';
 
 String globPassword = '';
 String globEmail = '';
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+  HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Restaurant System',
+      theme: ThemeData(
+        primarySwatch: Colors.red,
+      ),
       home: HomePageContent(),
     );
   }
@@ -93,6 +96,7 @@ class _HomePageContentState extends State<HomePageContent> {
       appBar: (currentIndex == 0) ? AppBar(
           title: TextField(
               controller: TextEditingController(text: addressString),
+              enabled: false,
               textAlignVertical: TextAlignVertical.bottom,
               style: const TextStyle(height:0.5, fontSize: 16),
               decoration: const InputDecoration(
@@ -109,7 +113,8 @@ class _HomePageContentState extends State<HomePageContent> {
                   //     BoxConstraints(maxWidth: 90.0, maxHeight: 47.5),
                   // suffixIcon: DistanceWidget()
                   )),
-          backgroundColor: const Color.fromRGBO(242, 242, 242, 1),
+          backgroundColor: const Color(0xFFFFF3E0),
+          elevation: 0.0,
         ) : null,
         backgroundColor: Color(0xFFFFF3E0),
         body: PageView(
@@ -174,7 +179,7 @@ class _HomePageContentState extends State<HomePageContent> {
     List<Placemark> placemark =
         await placemarkFromCoordinates(position.latitude, position.longitude);
     Placemark address = placemark[0];
-    addressString = "${address.street} : ${address.locality}";
+    addressString = "${address.street}, ${address.locality}, ${address.administrativeArea}";
     return true;
   }
 }

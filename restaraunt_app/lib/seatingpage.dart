@@ -20,16 +20,16 @@ class _SeatingPageState extends State<SeatingPage> {
         .where("name", isEqualTo: widget.restaurantName!);
     return Scaffold(
       appBar: AppBar(
-        title: Text("Seating"),
+        title: const Text("Seating"),
         actions: [
           Container(
-              padding: EdgeInsets.only(right: 10),
+              padding: const EdgeInsets.only(right: 10),
               child: Row(children: [
                 IconButton(
                     onPressed: () {
                       timerselector(context);
                     },
-                    icon: Icon(Icons.timer)),
+                    icon: const Icon(Icons.timer)),
                 Text("${timeFormat(selectedTime)}"),
               ]))
         ],
@@ -42,7 +42,7 @@ class _SeatingPageState extends State<SeatingPage> {
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (!snapshot.hasData) {
-              return Text("Error: No data");
+              return const Text("Error: No data");
             }
             final result = snapshot.data!.docs[0];
             return SeatingPageContent(
@@ -132,7 +132,7 @@ class _SeatingPageState extends State<SeatingPage> {
           double buttonspacer = 5;
           Color buttonColor = Colors.blue;
           return SimpleDialog(
-            title: Text("Select A Time"),
+            title: const Text("Select A Time"),
             children: [
               //Time buttons
               Column(
@@ -148,7 +148,7 @@ class _SeatingPageState extends State<SeatingPage> {
                           });
                           return Navigator.pop(context);
                         },
-                        child: Text("12:00 pm"),
+                        child: const Text("12:00 pm"),
                         style: ElevatedButton.styleFrom(
                             textStyle: const TextStyle(fontSize: fontSize),
                             primary: buttonColor,
@@ -164,7 +164,7 @@ class _SeatingPageState extends State<SeatingPage> {
                           });
                           return Navigator.pop(context);
                         },
-                        child: Text("1:00 pm "),
+                        child: const Text("1:00 pm "),
                         style: ElevatedButton.styleFrom(
                             textStyle: const TextStyle(fontSize: fontSize),
                             primary: buttonColor,
@@ -182,7 +182,7 @@ class _SeatingPageState extends State<SeatingPage> {
                           });
                           return Navigator.pop(context);
                         },
-                        child: Text("2:00 pm"),
+                        child: const Text("2:00 pm"),
                         style: ElevatedButton.styleFrom(
                             textStyle: const TextStyle(fontSize: fontSize),
                             primary: buttonColor,
@@ -198,7 +198,7 @@ class _SeatingPageState extends State<SeatingPage> {
                           });
                           return Navigator.pop(context);
                         },
-                        child: Text("3:00 pm"),
+                        child: const Text("3:00 pm"),
                         style: ElevatedButton.styleFrom(
                             textStyle: const TextStyle(fontSize: fontSize),
                             primary: buttonColor,
@@ -216,7 +216,7 @@ class _SeatingPageState extends State<SeatingPage> {
                           });
                           return Navigator.pop(context);
                         },
-                        child: Text("4:00 pm"),
+                        child: const Text("4:00 pm"),
                         style: ElevatedButton.styleFrom(
                             textStyle: const TextStyle(fontSize: fontSize),
                             primary: buttonColor,
@@ -232,7 +232,7 @@ class _SeatingPageState extends State<SeatingPage> {
                           });
                           return Navigator.pop(context);
                         },
-                        child: Text("5:00 pm"),
+                        child: const Text("5:00 pm"),
                         style: ElevatedButton.styleFrom(
                             textStyle: const TextStyle(fontSize: fontSize),
                             primary: buttonColor,
@@ -250,7 +250,7 @@ class _SeatingPageState extends State<SeatingPage> {
                           });
                           return Navigator.pop(context);
                         },
-                        child: Text("6:00 pm"),
+                        child: const Text("6:00 pm"),
                         style: ElevatedButton.styleFrom(
                           textStyle: const TextStyle(fontSize: fontSize),
                           primary: buttonColor,
@@ -267,7 +267,7 @@ class _SeatingPageState extends State<SeatingPage> {
                           });
                           return Navigator.pop(context);
                         },
-                        child: Text("7:00 pm"),
+                        child: const Text("7:00 pm"),
                         style: ElevatedButton.styleFrom(
                             textStyle: const TextStyle(fontSize: fontSize),
                             primary: buttonColor,
@@ -285,7 +285,7 @@ class _SeatingPageState extends State<SeatingPage> {
                           });
                           return Navigator.pop(context);
                         },
-                        child: Text("8:00 pm"),
+                        child: const Text("8:00 pm"),
                         style: ElevatedButton.styleFrom(
                             textStyle: const TextStyle(fontSize: fontSize),
                             primary: buttonColor,
@@ -301,7 +301,7 @@ class _SeatingPageState extends State<SeatingPage> {
                           });
                           return Navigator.pop(context);
                         },
-                        child: Text("9:00 pm"),
+                        child: const Text("9:00 pm"),
                         style: ElevatedButton.styleFrom(
                             textStyle: const TextStyle(fontSize: fontSize),
                             primary: buttonColor,
@@ -319,7 +319,7 @@ class _SeatingPageState extends State<SeatingPage> {
                           });
                           return Navigator.pop(context);
                         },
-                        child: Text("10:00 pm"),
+                        child: const Text("10:00 pm"),
                         style: ElevatedButton.styleFrom(
                             textStyle: const TextStyle(fontSize: fontSize),
                             primary: buttonColor,
@@ -403,7 +403,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
                       : Colors.red),
               iconSize: 100,
             ),
-            Text("Table 1")
+            const Text("Table 1")
           ],
         )),
         //table 2 button
@@ -432,7 +432,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
                       : Colors.red),
               iconSize: 100,
             ),
-            Text("Table 2")
+            const Text("Table 2")
           ],
         )),
         //table 3 button
@@ -519,7 +519,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
                       : Colors.red),
               iconSize: 100,
             ),
-            Text("Table 5")
+            const Text("Table 5")
           ],
         )),
         //table 6 button
@@ -548,7 +548,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
                       : Colors.red),
               iconSize: 100,
             ),
-            Text("Table 6")
+            const Text("Table 6")
           ],
         )),
         //table 7 button
@@ -577,7 +577,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
                       : Colors.red),
               iconSize: 100,
             ),
-            Text("Table 7")
+            const Text("Table 7")
           ],
         )),
         //table 8 button
@@ -606,7 +606,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
                       : Colors.red),
               iconSize: 100,
             ),
-            Text("Table 8")
+            const Text("Table 8")
           ],
         )),
       ],
@@ -632,14 +632,14 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Reservation Error"),
-            content: Text("You already have a reservation"),
+            title: const Text("Reservation Error"),
+            content: const Text("You already have a reservation"),
             actions: [
               TextButton(
                   onPressed: () {
                     return Navigator.pop(context);
                   },
-                  child: Text("OK")),
+                  child: const Text("OK")),
             ],
           );
         });
@@ -661,21 +661,21 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
   }
 
   //add reservation details to user account, and calls updateTablesAvailability
-  addReservation(String RestaurantName, String time, String tableNumber, String tabletime) async {
+  addReservation(String restaurantName, String time, String tableNumber, String tabletime) async {
     List<Map<String, dynamic>> record = await DBHelper.dbHelper.getAllInfo();
     String email = record[0]["email"];
     return showDialog(
       context: context, 
       builder: (BuildContext context){
         return AlertDialog(
-          title: Text("Confirm"),
+          title: const Text("Confirm"),
           content: Text("Are yousure you want to book Table${tableNumber} at ${int.parse(time) - 12}pm?"),
           actions: [
             TextButton(
               onPressed: (){
                 return Navigator.pop(context);
               },
-              child: Text("Cancel")
+              child: const Text("Cancel")
             ),
             TextButton(
               onPressed: () async{
@@ -688,16 +688,16 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
                     FirebaseFirestore.instance.collection('users').doc(userId).update({
                       'isReserved': true,
                       'reservation': {
-                        'restarauntName': '$RestaurantName',
-                        'tableNumber': '$tableNumber',
-                        'reservationTime': '$time'
+                        'restarauntName': restaurantName,
+                        'tableNumber': tableNumber,
+                        'reservationTime': time
                       }
                 }).then((value) => print("Table reserved"));
                 });
                 updateTablesAvailability(tabletime);
                 return Navigator.pop(context);
               }, 
-              child: Text("Confirm")
+              child: const Text("Confirm")
             ),
           ],
         );
