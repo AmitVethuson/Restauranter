@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'seatingpage.dart';
 import 'restaurant_model.dart';
+import 'menu_page.dart';
 
 //resturant page
 class RestaurantPage extends StatefulWidget {
@@ -17,6 +18,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
   late RestaurantModel restaurant;
   @override
   Widget build(BuildContext context) {
+    //get current restaurant information
     restaurant = widget.currentrestaurant;
     return Scaffold(
         backgroundColor: const Color(0xFFFFF3E0),
@@ -39,6 +41,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
         ));
   }
 
+//update page
   updatePage() {
     setState(() {
       restaurant = widget.currentrestaurant;
@@ -58,6 +61,7 @@ class RestaurantInfo extends StatefulWidget {
 class _RestaurantInfoState extends State<RestaurantInfo> {
   int waittime = 0;
 
+//get queue time when initiated
   @override
   void initState() {
     super.initState();
@@ -66,7 +70,10 @@ class _RestaurantInfoState extends State<RestaurantInfo> {
 
   @override
   Widget build(BuildContext context) {
-    double iconSize = 20;
+    //get restaurant collection
+    CollectionReference collectionReference =
+        FirebaseFirestore.instance.collection("restaurant");
+    double iconSize = 22;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -74,7 +81,7 @@ class _RestaurantInfoState extends State<RestaurantInfo> {
           height: 5,
         ),
 
-        //Location data
+        //Location Display
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -103,8 +110,8 @@ class _RestaurantInfoState extends State<RestaurantInfo> {
               Row(
                 children: [
                   Icon(Icons.calendar_today, size: iconSize),
-                  const Text("Hours: 11:00 AM - 7:00 PM",
-                      style: TextStyle(color: Colors.black, fontSize: 13)),
+                  Text("Hours: 12:00 PM - 11:00 PM",
+                      style: TextStyle(color: Colors.black, fontSize: 12)),
                 ],
               ),
               //Queue time data display
@@ -139,6 +146,7 @@ class _RestaurantInfoState extends State<RestaurantInfo> {
     );
   }
 
+  //get waittime from restaurant in db
   getQueueTime(String restaurantName) async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection("restaurant")
@@ -172,7 +180,6 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
       child: Column(
         children: [
           const SizedBox(height: 20),
-
           //menu button
           Container(
             width: 350,
@@ -195,7 +202,8 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
                 children: [
                   ElevatedButton(
                       onPressed: () {
-                        print("menu");
+                        Navigator.push(
+                        context, MaterialPageRoute(builder: (context) => MenuPage()));
                       },
                       child: const Text("Menu"),
                       style: ElevatedButton.styleFrom(
@@ -231,12 +239,22 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
                 children: [
                   ElevatedButton(
                       onPressed: () {
+                        //get current hour
+                        int now = DateTime.now().hour;
+
+                        //allow the ability to book restaurant prior to open time
+                        if (now < 12) {
+                          now = 11;
+                        }
+                        //display seating page
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => SeatingPage(
-                                    restaurantName:
-                                        widget.restaurantInformation.name)));
+                                      restaurantName:
+                                          widget.restaurantInformation.name,
+                                      currentTime: "${now + 1}",
+                                    )));
                       },
                       child: const Text("Seating"),
                       style: ElevatedButton.styleFrom(
@@ -323,6 +341,7 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
         ));
   }
 
+//update queue value in db
   updateQueue(String restaurantName) async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection("restaurant")
