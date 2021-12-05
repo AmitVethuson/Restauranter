@@ -187,6 +187,7 @@ class _registerForm extends State<registerForm> {
                           if(querySnapshot.size != 0){
                             UserAlreadyExists(context);
                           }else{
+                            //checks user for same password
                             if(passwordController.text != reEnterPasswordController.text){
                               _IncorrectPassword(context);
                             }else{
