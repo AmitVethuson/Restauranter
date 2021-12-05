@@ -53,6 +53,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
 class RestaurantInfo extends StatefulWidget {
   const RestaurantInfo({Key? key, required this.restaurantInformation})
       : super(key: key);
+  //current Restaurant information
   final RestaurantModel restaurantInformation;
   @override
   State<RestaurantInfo> createState() => _RestaurantInfoState();
@@ -341,7 +342,6 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
                           ? null
                           : () async {
                               if (await checkQueueStatus() == false) {
-
                                 updateQueue(widget.restaurantInformation.name);
                                 updateQueueStatus(true);
                                 checkQueueStatus();
@@ -410,7 +410,6 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
     setState(() {
       isDisabled = reservationStatus;
     });
-
     return reservationStatus;
   }
 

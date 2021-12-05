@@ -6,7 +6,7 @@ class MenuPage extends StatefulWidget {
   @override
   _MenuPageState createState() => _MenuPageState();
 }
-
+//Menu Pages
 class _MenuPageState extends State<MenuPage> {
   @override
   Widget build(BuildContext context) {
@@ -14,6 +14,7 @@ class _MenuPageState extends State<MenuPage> {
       appBar: AppBar(
         title: const Text("Menu"),
       ),
+      //listview of menu items
       body: ListView(
         children: [
           Container(
@@ -23,6 +24,7 @@ class _MenuPageState extends State<MenuPage> {
                     color: Colors.red,
                     fontSize: 25,
                   ))),
+          // add starter menu items to listview
           createContainer(
               "Garlic Escargot",
               "Topped with mozzarella and parmesan served with garlic toast.",
@@ -41,6 +43,7 @@ class _MenuPageState extends State<MenuPage> {
                     color: Colors.red,
                     fontSize: 25,
                   ))),
+          // add entrees menu items to listview
           createContainer("Danish Baby Back Pork Rum Ribs - Full",
               "Delicious with thick rum Sauce.", "\$23.99"),
           createContainer("Lemon Chicken",
@@ -58,6 +61,7 @@ class _MenuPageState extends State<MenuPage> {
                     color: Colors.red,
                     fontSize: 25,
                   ))),
+          // add Other Choices menu items to listview
           createContainer("Steak Sandwhich - 8oz",
               "Served on garlic toast with house salad and fries.", "\$19.99"),
           createContainer("Fish 'n Chips",
@@ -74,6 +78,7 @@ class _MenuPageState extends State<MenuPage> {
   }
 }
 
+//MenuItem Containter Tile
 Widget createContainer(String menuItem, String menuDescprition, String price) {
   return ListTile(
     title: Text(menuItem),

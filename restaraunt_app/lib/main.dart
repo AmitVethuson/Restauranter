@@ -32,7 +32,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
+//Initial page of our application for login/register
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,6 +56,9 @@ class _MyHomePageState extends State<MyHomePage> {
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
+                    
+                    //Directs user to login.dart page
+
                       context, MaterialPageRoute(builder: (context) => Login()));
                 },
                 child: const Text("Login", style:TextStyle(fontFamily: "Sora", color: Colors.black)),
@@ -71,6 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
+                    //Directs user to register.dart page
                       context, MaterialPageRoute(builder: (context) => Register()));
                 },
                 child: const Text("Register", style:TextStyle(color: Colors.black)),
