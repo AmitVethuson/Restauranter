@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'db_helper.dart';
 import 'main.dart';
 import 'timeformat.dart';
-import 'notification.dart';
 void main() async {
   //print("test");
 }
@@ -35,7 +34,7 @@ class _ProfilePageState extends State<ProfilePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xFFFFF3E0),
+        backgroundColor: const Color(0xFFFFF3E0),
         body: ListView(children: <Widget>[
       Column(
         children: <Widget>[
@@ -291,7 +290,7 @@ class _ProfilePageState extends State<ProfilePage>
                       onPressed: () async {
                         Navigator.pop(context);
                         Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => MyApp()));
+                            MaterialPageRoute(builder: (context) => const MyApp()));
                       },
                       child: const Text("Logout"))),
         ],
@@ -345,7 +344,7 @@ class _ProfilePageState extends State<ProfilePage>
                     onPressed: () {
                       return Navigator.pop(context);
                     },
-                    child: Text("OK")),
+                    child: const Text("OK")),
               ],
             );
           });
@@ -357,7 +356,7 @@ class _ProfilePageState extends State<ProfilePage>
             return AlertDialog(
               title: const Text("Current Reservations"),
               content: Text(
-                  "Your Current Reservation is $restarauntName at ${formatTime().timeFormat(reservationTime)} at Table $tableNumber"),
+                  "Your Current Reservation is $restarauntName at ${FormatTime().timeFormat(reservationTime)} at Table $tableNumber"),
               actions: [
                 TextButton(
                     onPressed: () {
@@ -370,7 +369,7 @@ class _ProfilePageState extends State<ProfilePage>
                       return _cancelReservation(context, email, restarauntName,
                           reservationTime, tableNumber);
                     },
-                    child: Text("Cancel Reservation")),
+                    child: const Text("Cancel Reservation")),
               ],
             );
           });

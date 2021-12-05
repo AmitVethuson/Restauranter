@@ -1,7 +1,5 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter/material.dart';
-import 'package:restaraunt_app/homepage.dart';
-import 'package:restaraunt_app/profile_page.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'timeformat.dart';
@@ -19,7 +17,7 @@ class MyNotification{
   initNotification(){
     tz.initializeTimeZones();
     notification = FlutterLocalNotificationsPlugin();
-    AndroidInitializationSettings androidInitializationSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    AndroidInitializationSettings androidInitializationSettings = const AndroidInitializationSettings('@mipmap/ic_launcher');
     InitializationSettings initializationSettings = InitializationSettings(android: androidInitializationSettings);
     notification.initialize(initializationSettings,
     );
@@ -28,7 +26,7 @@ class MyNotification{
 
   //show notification function 
   Future showNotification(int hour, String restaurant, String reservation)async{
-    var androidNotification = AndroidNotificationDetails("channelId", "channelName",priority: Priority.high,importance: Importance.max);
+    var androidNotification = const AndroidNotificationDetails("channelId", "channelName",priority: Priority.high,importance: Importance.max);
     var notificationDetails = NotificationDetails(android: androidNotification);
     //get current time
     var now = DateTime.now();
@@ -39,7 +37,7 @@ class MyNotification{
       await notification.show(
 	        101,
 	        "Your Reservation",
-	        "${formatTime().timeFormat(reservation)} at $restaurant",
+	        "${FormatTime().timeFormat(reservation)} at $restaurant",
 	        notificationDetails,
           );
 
@@ -50,7 +48,7 @@ class MyNotification{
       await notification.zonedSchedule(
 	        101,
 	        "Your Reservation",
-	        "${formatTime().timeFormat(reservation)} at $restaurant",
+	        "${FormatTime().timeFormat(reservation)} at $restaurant",
 	        tz.TZDateTime.from(DateTime(now.year,now.month,now.day,hour-1,0,0,0,0), tz.local)
 	            .add(const Duration(seconds: 0)),
 	        notificationDetails,

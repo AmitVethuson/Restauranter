@@ -1,5 +1,5 @@
 
-class formatTime{
+class FormatTime{
   //format 24hr time to 12hr time
   timeFormat(String time) {
     switch (time) {

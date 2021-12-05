@@ -108,7 +108,7 @@ class _RestaurantInfoState extends State<RestaurantInfo> {
             Row(
               children: [
                 Icon(Icons.calendar_today, size: iconSize),
-                Text("Hours: 12:00 PM - 11:00 PM",
+                const Text("Open Now",
                     style: TextStyle(color: Colors.black, fontSize: 12)),
               ],
             ),
@@ -204,7 +204,7 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => MenuPage()));
+                                builder: (context) => const MenuPage()));
                       },
                       child: const Text("Menu"),
                       style: ElevatedButton.styleFrom(
@@ -341,7 +341,6 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
                           ? null
                           : () async {
                               if (await checkQueueStatus() == false) {
-                                print('bye');
 
                                 updateQueue(widget.restaurantInformation.name);
                                 updateQueueStatus(true);
@@ -411,7 +410,6 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
     setState(() {
       isDisabled = reservationStatus;
     });
-    print("This is $isDisabled");
 
     return reservationStatus;
   }

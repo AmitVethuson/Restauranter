@@ -31,10 +31,10 @@ class _SeatingPageState extends State<SeatingPage> {
                     onPressed: () {
                       timerselector(context);
                     },
-                    icon: Icon(Icons.timer)),
+                    icon: const Icon(Icons.timer)),
 
                 //shows the earliest table you can book
-                Text("${formatTime().timeFormat(widget.currentTime)}"),
+                Text("${FormatTime().timeFormat(widget.currentTime)}"),
               ]))
         ],
       ),
@@ -286,7 +286,7 @@ class _SeatingPageState extends State<SeatingPage> {
                           });
                           return Navigator.pop(context);
                         },
-                        child: Text("11:00 pm"),
+                        child: const Text("11:00 pm"),
                         style: ElevatedButton.styleFrom(
                             textStyle: const TextStyle(fontSize: fontSize),
                             primary: buttonColor,
@@ -323,7 +323,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
   Widget build(BuildContext context) {
     return GridView.count(
       crossAxisCount: 2,
-      padding: EdgeInsets.all(50),
+      padding: const EdgeInsets.all(50),
       children: [
         //table 1 button
         Center(
@@ -399,7 +399,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
                       : Colors.red),
               iconSize: 100,
             ),
-            Text("Table 3")
+            const Text("Table 3")
           ],
         )),
         //table 4 button
@@ -420,7 +420,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
                   color: (widget.SnapshotResult.get("table4")[widget.time]["isAvailable"] ==true)? Colors.blue: Colors.red),
               iconSize: 100,
             ),
-            Text("Table 4")
+            const Text("Table 4")
           ],
         )),
         //table 5 button
@@ -567,7 +567,7 @@ class _SeatingPageContentState extends State<SeatingPageContent> {
       builder: (BuildContext context){
         return AlertDialog(
           title: const Text("Confirm"),
-          content: Text("Are yousure you want to book Table${tableNumber} at ${int.parse(time) - 12}pm?"),
+          content: Text("Are yousure you want to book Table$tableNumber at ${int.parse(time) - 12}pm?"),
           actions: [
             TextButton(
               onPressed: (){

@@ -7,11 +7,8 @@ import 'package:restaraunt_app/search_page.dart';
 import 'restaurant_list.dart';
 import 'profile_page.dart';
 
-String globPassword = '';
-String globEmail = '';
-
 class HomePage extends StatelessWidget {
-  HomePage({Key? key}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +17,7 @@ class HomePage extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      home: HomePageContent(),
+      home: const HomePageContent(),
     );
   }
 }
@@ -59,6 +56,7 @@ class _HomePageContentState extends State<HomePageContent> {
           } else {
             return Scaffold(
               body: Center(
+                // Loading widget
                 child: LoadingAnimationWidget.fourRotatingDots(
                 size: 250,
                 color: const Color(0xFFFF9800),
@@ -70,20 +68,25 @@ class _HomePageContentState extends State<HomePageContent> {
         });
   }
 
+  // Allows for routing between the home page, search page, and page
   Widget mainscreen() {
     PageController pageController = PageController();
 
+    // Page routes
     final screens = [
       RestaurantListWidget(position: position, listType:1, search:""),
       SearchPage(position:position),
       ProfilePage(" ", " "),
     ];
+    
     void onChange(int index) {
       setState(() {
         currentIndex = index;
       });
     }
 
+    // When the user taps an item in the bottom navigation bar this function
+    // transitions the page
     void onNavigationTap(int index) {
       pageController.animateToPage(
         index,
@@ -93,12 +96,18 @@ class _HomePageContentState extends State<HomePageContent> {
     }
 
     return Scaffold(
+      // The app bar is conditional as it varies between the profile, search,
+      // and home page
       appBar: (currentIndex == 0) ? AppBar(
           title: TextField(
               controller: TextEditingController(text: addressString),
+              
               enabled: false,
+              
               textAlignVertical: TextAlignVertical.bottom,
+              
               style: const TextStyle(height:1, fontSize: 16),
+              
               decoration: const InputDecoration(
                   prefixIcon: Icon(
                     Icons.location_pin,
@@ -109,44 +118,54 @@ class _HomePageContentState extends State<HomePageContent> {
                     color: Colors.black,
                     width: 1.0,
                   )),
-                  // suffixIconConstraints:
-                  //     BoxConstraints(maxWidth: 90.0, maxHeight: 47.5),
-                  // suffixIcon: DistanceWidget()
-                  )),
+                )),
+
           backgroundColor: const Color(0xFFFFF3E0),
+
           elevation: 0.0,
+        
         ) : PreferredSize (
               preferredSize: const Size.fromHeight(50.0),
               child:AppBar(
                 backgroundColor: Colors.transparent,
                 elevation: 0.0
               )),
+
         backgroundColor: const Color(0xFFFFF3E0),
+
         body: PageView(
           controller: pageController,
           children: screens,
           onPageChanged: onChange,
         ),
+
         bottomNavigationBar: BottomNavigationBar(
           showSelectedLabels: false,
           showUnselectedLabels: false,
+          
           unselectedFontSize: 0.0,
           selectedFontSize: 0.0,
+          
           currentIndex: currentIndex,
+          
           onTap: (index) =>
               setState(() => {
                 currentIndex = index,
                 onNavigationTap(currentIndex)
               }),
+
+          // Bottom menu bar items that route to various pages
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: "Home",
             ),
+
             BottomNavigationBarItem(
               icon: Icon(Icons.search),
               label: "Search",
             ),
+
             BottomNavigationBarItem(
               icon: Icon(Icons.person),
               label: "Profile",
@@ -157,6 +176,7 @@ class _HomePageContentState extends State<HomePageContent> {
 
   // Checks if location service has been enabled on the user's device and requests
   // permission to use location data
+  // Referenced from the geolocator plugin documentation
   Future<Position> getLocation() async {
     status = await Geolocator.isLocationServiceEnabled();
 
@@ -179,6 +199,7 @@ class _HomePageContentState extends State<HomePageContent> {
     return position;
   }
 
+  // Location coordinates are retrieved and then converted to string format address
   Future<bool> getStreetAddress() async {
     position = await getLocation();
     List<Placemark> placemark =

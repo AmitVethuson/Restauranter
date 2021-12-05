@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class MenuPage extends StatefulWidget {
+  const MenuPage({Key? key}) : super(key: key);
+
   @override
   _MenuPageState createState() => _MenuPageState();
 }
@@ -16,7 +18,7 @@ class _MenuPageState extends State<MenuPage> {
         children: [
           Container(
               padding: const EdgeInsets.all(8.0),
-              child: Text('Starters',
+              child: const Text('Starters',
                   style: TextStyle(
                     color: Colors.red,
                     fontSize: 25,
@@ -34,7 +36,7 @@ class _MenuPageState extends State<MenuPage> {
               "Served with sweet chili sauce.", "\$14.99"),
           Container(
               padding: const EdgeInsets.all(8.0),
-              child: Text('Entrees',
+              child: const Text('Entrees',
                   style: TextStyle(
                     color: Colors.red,
                     fontSize: 25,
@@ -51,7 +53,7 @@ class _MenuPageState extends State<MenuPage> {
               "Baked with seasonings and white wine.", "\$19.99"),
           Container(
               padding: const EdgeInsets.all(8.0),
-              child: Text('Other Choices',
+              child: const Text('Other Choices',
                   style: TextStyle(
                     color: Colors.red,
                     fontSize: 25,

@@ -95,7 +95,7 @@ class _RestaurantListWidget extends State<RestaurantListWidget>
 
                         children: <Widget>[
                           Text(places[index].name,
-                              style: TextStyle(fontSize: 14)),
+                              style: const TextStyle(fontSize: 14)),
 
                           const Padding(padding: EdgeInsets.only(bottom: 10.0)),
 

@@ -86,7 +86,7 @@ class _LoginFormState extends State<LoginForm> {
                 obscureText: true,
                 decoration: InputDecoration(
                     labelText: "Password",
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                     //clear button
                     suffixIcon: IconButton(
                         onPressed: () {
@@ -151,7 +151,7 @@ class _LoginFormState extends State<LoginForm> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => HomePage()));
+                builder: (context) => const HomePage()));
       } else {
         //if false then add a red text saying something wrong!
         _showAlertDialog(context);

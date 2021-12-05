@@ -126,13 +126,13 @@ class _RegisterForm extends State<RegisterForm> {
                       }
                     },
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
                   TextFormField(
                     obscureText: true,
                     controller: reEnterPasswordController,
-                    decoration: InputDecoration(labelText: "Re-enter Password"),
+                    decoration: const InputDecoration(labelText: "Re-enter Password"),
                     validator: (value) {
                       if (value == null ||
                           value.isEmpty) {
@@ -208,14 +208,14 @@ class _RegisterForm extends State<RegisterForm> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Password dont match"),
-            content: Text("Please make sure the to re-enter the same password."),
+            title: const Text("Password dont match"),
+            content: const Text("Please make sure the to re-enter the same password."),
             actions: [
               TextButton(
                   onPressed: () {
                     return Navigator.pop(context);
                   },
-                  child: Text("Close")),
+                  child: const Text("Close")),
             ],
           );
         });
@@ -226,14 +226,14 @@ class _RegisterForm extends State<RegisterForm> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Email Already Exists"),
-            content: Text("This email is already associated with another account."),
+            title: const Text("Email Already Exists"),
+            content: const Text("This email is already associated with another account."),
             actions: [
               TextButton(
                   onPressed: () {
                     return Navigator.pop(context);
                   },
-                  child: Text("Close")),
+                  child: const Text("Close")),
             ],
           );
         });
