@@ -243,7 +243,7 @@ class _RestarauntPageContentState extends State<RestarauntPageContent> {
                         int now = DateTime.now().hour;
 
                         //allow the ability to book restaurant prior to open time
-                        if (now < 12) {
+                        if (now < 12 || now ==23) {
                           now = 11;
                         }
                         //display seating page
