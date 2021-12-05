@@ -5,10 +5,11 @@ import 'main.dart';
 import 'timeformat.dart';
 import 'notification.dart';
 void main() async {
-  print("test");
+  //print("test");
 }
 
 class ProfilePage extends StatefulWidget {
+  //This was meant for testing purposes and has become useless(email and password)
   String email = '';
   String password = '';
   ProfilePage(this.email, this.password);
@@ -18,17 +19,19 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage>
     with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+  //Empty list is needed to prevent error from occuring when loading in
   List<String> info = [" ", " ", " ", " ", " ", " "];
 
   @override
   void initState() {
+    //Calls getAllData to get user information
     getAllData();
     super.initState();
   }
 
   @override
   bool get wantKeepAlive => true;
-
+//This is code for the profile page UI
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -141,6 +144,7 @@ class _ProfilePageState extends State<ProfilePage>
                                 child: TextField(
                                   readOnly: true,
                                   decoration: InputDecoration(
+                                    //Adding the names together
                                     hintText: info[1] + " " + info[2],
                                   ),
                                 ),
@@ -177,6 +181,7 @@ class _ProfilePageState extends State<ProfilePage>
                                 child: TextField(
                                   readOnly: true,
                                   decoration:
+                                  //printing the Email address
                                       InputDecoration(hintText: info[3]),
                                 ),
                               ),
@@ -212,6 +217,7 @@ class _ProfilePageState extends State<ProfilePage>
                                 child: TextField(
                                   readOnly: true,
                                   decoration:
+                                  //printing the phone number 
                                       InputDecoration(hintText: info[4]),
                                 ),
                               ),
@@ -257,6 +263,7 @@ class _ProfilePageState extends State<ProfilePage>
                                   child: TextField(
                                     readOnly: true,
                                     decoration:
+                                    //Printing the Province
                                         InputDecoration(hintText: info[0]),
                                   ),
                                 ),
@@ -266,6 +273,8 @@ class _ProfilePageState extends State<ProfilePage>
                                 child: TextField(
                                   readOnly: true,
                                   decoration:
+                                       //Printing the Province
+
                                       InputDecoration(hintText: "Ontario"),
                                 ),
                                 flex: 2,
@@ -291,13 +300,15 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   getAllData() async {
+    //Calls from the local database all the users in its db(should always be 1) 
     List<Map<String, dynamic>> record = await DBHelper.dbHelper.getAllInfo();
     // int re = await DBHelper.dbHelper.delete("6471231234");
     // int de = await DBHelper.dbHelper.delete("123-456-7890");
-
+    //clears list info
     info.clear();
     setState(() {
       for (var element in record) {
+        //Adds all the user information to a list. 
         info.add(element["country"]);
         info.add(element["firstName"]);
         info.add(element["lastName"]);
