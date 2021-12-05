@@ -113,6 +113,7 @@ class _RegisterForm extends State<RegisterForm> {
                     height: 15,
                   ),
                   TextFormField(
+                    obscureText: true,
                     controller: passwordController,
                     decoration: const InputDecoration(labelText: "Password"),
                     validator: (value) {
@@ -128,6 +129,7 @@ class _RegisterForm extends State<RegisterForm> {
                     height: 15,
                   ),
                   TextFormField(
+                    obscureText: true,
                     controller: reEnterPasswordController,
                     decoration: InputDecoration(labelText: "Re-enter Password"),
                     validator: (value) {
@@ -171,17 +173,28 @@ class _RegisterForm extends State<RegisterForm> {
                     height: 20,
                   ),
                   ElevatedButton(
-                      onPressed: () {
-                        print(firstNameController.text);
-                        
+                      onPressed: () async{
+                        print(firstNameController.text);  
+
                         if(_formKey.currentState!.validate()){
-                          if(passwordController.text != reEnterPasswordController.text){
-                              _IncorrectPassword(context);
+                          //check if the database already has a user with the same email address
+                          QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+                            .collection('users')
+                            .where('email', isEqualTo: emailController.text)
+                            .get().catchError((error) => print("Failed to add user: $error"));
+                          if(querySnapshot.size != 0){
+                            UserAlreadyExists(context);
                           }else{
-                          registerInfo(users);
-                          Navigator.pop(context);
-                          Navigator.push(context,MaterialPageRoute(builder: (context) => Login()));
-                        }}
+                            //checks user for same password
+                            if(passwordController.text != reEnterPasswordController.text){
+                              _IncorrectPassword(context);
+                            }else{
+                              registerInfo(users);
+                              Navigator.pop(context);
+                              Navigator.push(context,MaterialPageRoute(builder: (context) => Login()));
+                            }
+                          }
+                        }
                       },
                       child: const Text("Register"))
                 ],
@@ -196,6 +209,24 @@ class _RegisterForm extends State<RegisterForm> {
           return AlertDialog(
             title: Text("Password dont match"),
             content: Text("Please make sure the to re-enter the same password."),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    return Navigator.pop(context);
+                  },
+                  child: Text("Close")),
+            ],
+          );
+        });
+  }
+
+  UserAlreadyExists(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Email Already Exists"),
+            content: Text("This email is already associated with another account."),
             actions: [
               TextButton(
                   onPressed: () {
