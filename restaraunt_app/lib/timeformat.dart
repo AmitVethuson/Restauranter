@@ -1,5 +1,6 @@
 
 class formatTime{
+  //format 24hr time to 12hr time
   timeFormat(String time) {
     switch (time) {
       case "12":
