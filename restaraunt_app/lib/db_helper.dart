@@ -46,12 +46,13 @@ class DBHelper {
     Database db = await database;
     return await db.insert("Information", row);
   }
-
+//Delete function for when user logouts(meant to delete the information stored in the local db)
   Future<int> delete(String password) async {
     Database db = await database;
     return await db.delete("Information",where: "password=?",whereArgs:[password]);
   }
-
+//Delete entire db when user logouts/logins(meant to cover just in case someone closes app prematurely during testing)
+  //this is more preferred
     Future<void> deleteDB() async {
     var dbPath = await getDatabasesPath();
     String path = join(dbPath, 'mydb.db');
