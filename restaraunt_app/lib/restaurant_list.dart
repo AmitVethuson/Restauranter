@@ -1,5 +1,3 @@
-// ignore_for_file: file_names
-
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
@@ -9,8 +7,9 @@ import 'package:http/http.dart' as http;
 import 'restaurantpage.dart';
 import 'restaurant_model.dart';
 
-class ListViewWidget extends StatefulWidget {
-  const ListViewWidget(
+// Stateful widget for generating a listview of all the restaurants
+class RestaurantListWidget extends StatefulWidget {
+  const RestaurantListWidget(
       {Key? key,
       required this.position,
       required this.listType,
@@ -20,10 +19,10 @@ class ListViewWidget extends StatefulWidget {
   final int listType;
   final String search;
   @override
-  _ListViewWidget createState() => _ListViewWidget();
+  _RestaurantListWidget createState() => _RestaurantListWidget();
 }
 
-class _ListViewWidget extends State<ListViewWidget>
+class _RestaurantListWidget extends State<RestaurantListWidget>
     with AutomaticKeepAliveClientMixin {
   List<double> coordinates = [0.0, 0.0];
   static const apiKey = 'AIzaSyAGEFJEsEIDKggCpWYsm7POlK9h0PpTNfw';
@@ -38,6 +37,12 @@ class _ListViewWidget extends State<ListViewWidget>
       searchNear();
     });
   }
+
+  // Required for the AutomaticKeepAliveClientMixin which allows the user to 
+  // navigate between the other pages and retain the page at the same state/
+  // location
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
@@ -87,12 +92,18 @@ class _ListViewWidget extends State<ListViewWidget>
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
+
                         children: <Widget>[
                           Text(places[index].name,
                               style: TextStyle(fontSize: 14)),
+
                           const Padding(padding: EdgeInsets.only(bottom: 10.0)),
+
                           Text(places[index].address),
+
                           const Padding(padding: EdgeInsets.only(bottom: 10.0)),
+                          
+                          // Creates a rating bar for each restaurant
                           Row(children: [
                             for (int i = 0; i < wholeStars; i += 1)
                               const Icon(Icons.star, color: Colors.red),
@@ -102,6 +113,8 @@ class _ListViewWidget extends State<ListViewWidget>
                           ])
                         ]),
                   ),
+
+                  // Container for the image 
                   SizedBox(
                       width: 150.0,
                       height: 175.0,
@@ -121,6 +134,8 @@ class _ListViewWidget extends State<ListViewWidget>
                             })),
                           ])),
                 ])),
+
+            // Routes the user to the selected restaurant page 
             onTap: () async => {
                   checkFirestore(places[index].name),
                   Navigator.push(
@@ -128,10 +143,12 @@ class _ListViewWidget extends State<ListViewWidget>
                       MaterialPageRoute(
                           builder: (context) => RestaurantPage(
                               currentrestaurant: places[index]))),
-                  print(places[index].name),
                 }));
   }
 
+  // Uses the location of the user to get restaurants nearby using the Google Places 
+  // API then stores the restaurant information in a list to generate the restaurant
+  // cards
   Future<void> searchNear() async {
     coordinates = [widget.position.latitude, widget.position.longitude];
 
@@ -147,11 +164,15 @@ class _ListViewWidget extends State<ListViewWidget>
       String imageref;
       DetailsResponse? detailsRequest;
       var address, hours;
+      
+      //Checks if the response contains an image 
       if (item['photos'] == null) {
         imageref = "null";
       } else {
         imageref = item['photos'][0]['photo_reference'].toString();
       }
+
+      //Checks if the response contains a formattedAddress
       detailsRequest = (await googlePlace.details.get(item['place_id']));
       if (detailsRequest?.result?.formattedAddress == null) {
         address = null;
@@ -159,11 +180,14 @@ class _ListViewWidget extends State<ListViewWidget>
         address = detailsRequest?.result?.formattedAddress;
       }
 
+      //Checks if the response contains opening hours
       if (detailsRequest?.result?.openingHours?.periods == null) {
         hours = null;
       } else {
         hours = detailsRequest?.result?.openingHours?.weekdayText;
       }
+
+      // Removes a portion of the full address
       address = (address != null)
           ? address.substring(0, address.indexOf(','))
           : address;
@@ -178,6 +202,9 @@ class _ListViewWidget extends State<ListViewWidget>
     });
   }
 
+  // Uses the input of the user to search restaurants using the Google Places 
+  // API then stores the restaurant information in a list to generate the restaurant
+  // cards
   Future<void> searchPlace(String search) async {
     String url =
         'https://maps.googleapis.com/maps/api/place/textsearch/json?query=restaurants%$search&key=$apiKey';
@@ -189,12 +216,15 @@ class _ListViewWidget extends State<ListViewWidget>
       String imageref;
       DetailsResponse? detailsRequest;
       var address, hours;
+      
+      //Checks if the response contains an image 
       if (item['photos'] == null) {
         imageref = "null";
       } else {
         imageref = item['photos'][0]['photo_reference'].toString();
       }
 
+      //Checks if the response contains a formattedAddress
       detailsRequest = (await googlePlace.details.get(item['place_id']));
       if (detailsRequest?.result?.formattedAddress == null) {
         address = null;
@@ -202,12 +232,14 @@ class _ListViewWidget extends State<ListViewWidget>
         address = detailsRequest?.result?.formattedAddress;
       }
 
+      //Checks if the response contains opening hours
       if (detailsRequest?.result?.openingHours?.periods == null) {
         hours = null;
       } else {
         hours = detailsRequest?.result?.openingHours?.weekdayText;
       }
 
+      // Removes a portion of the full address
       address = (address != null)
           ? address.substring(0, address.indexOf(','))
           : address;
@@ -222,6 +254,8 @@ class _ListViewWidget extends State<ListViewWidget>
     });
   }
 
+  // Checks Firestore database if the restaurant is in it. If it's not then it 
+  // will add a predefined table/seating system
   checkFirestore(String name) async {
     await FirebaseFirestore.instance
         .collection("restaurant")
@@ -347,7 +381,4 @@ class _ListViewWidget extends State<ListViewWidget>
                 })
             });
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }

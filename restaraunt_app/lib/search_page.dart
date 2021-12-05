@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:restaraunt_app/restaurant_list.dart';
 
+// Creates the search page where the user can search a restaurant
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key, required this.position}) : super(key: key);
   final Position position;
@@ -13,11 +14,18 @@ class _SearchPage extends State<SearchPage> with AutomaticKeepAliveClientMixin {
   bool complete = false;
   Widget list = Column();
 
+  // Required for the AutomaticKeepAliveClientMixin which allows the user to 
+  // navigate between the other pages and retain the page at the same state/
+  // location
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
         backgroundColor: const Color(0xFFFFF3E0),
+
         appBar: PreferredSize(
             child: AppBar(
               title: const Align(
@@ -33,6 +41,8 @@ class _SearchPage extends State<SearchPage> with AutomaticKeepAliveClientMixin {
               backgroundColor: Colors.transparent,
             ),
             preferredSize: const Size.fromHeight(50.0)),
+
+        // Container for the 
         body: Column(
           children: <Widget>[
             Padding(
@@ -40,13 +50,18 @@ class _SearchPage extends State<SearchPage> with AutomaticKeepAliveClientMixin {
                 child: TextField(
                     controller: TextEditingController(),
                     textAlignVertical: TextAlignVertical.center,
+
+                    // On completion of input the, search results are retrieved
                     onSubmitted: ((value) => {
                       complete = !complete,
-                      print(value + complete.toString()),
+
                       if (complete == true) {
                         setState(() {
-                          list = ListViewWidget(
-                              position: widget.position, listType: 2, search: value);
+                          list = RestaurantListWidget(
+                              position: widget.position,
+                              listType: 2,
+                              search: value
+                            );
                         }),
                       } else {
                         setState(() {
@@ -54,7 +69,10 @@ class _SearchPage extends State<SearchPage> with AutomaticKeepAliveClientMixin {
                         }),
                       },
                     }),
+
                     style: const TextStyle(fontSize: 14),
+
+                    // Input field for search
                     decoration: const InputDecoration(
                       hintText: "Enter restaurant name",
                       suffixIcon: Icon(
@@ -67,11 +85,9 @@ class _SearchPage extends State<SearchPage> with AutomaticKeepAliveClientMixin {
                         width: 1.0,
                       )),
                     ))),
+            // Search results 
             Expanded(child: list)
           ],
         ));
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }

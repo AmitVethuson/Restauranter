@@ -74,7 +74,7 @@ class _HomePageContentState extends State<HomePageContent> {
     PageController pageController = PageController();
 
     final screens = [
-      ListViewWidget(position: position, listType:1, search:""),
+      RestaurantListWidget(position: position, listType:1, search:""),
       SearchPage(position:position),
       ProfilePage(" ", " "),
     ];
@@ -188,37 +188,3 @@ class _HomePageContentState extends State<HomePageContent> {
     return true;
   }
 }
-
-// class DistanceWidget extends StatefulWidget {
-//   const DistanceWidget({Key? key}) : super(key: key);
-
-//   @override
-//   _DistanceWidget createState() => _DistanceWidget();
-// }
-
-// class _DistanceWidget extends State<DistanceWidget> {
-//   int dropdownValue = 5;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       padding: const EdgeInsets.only(left: 7.5, right: 7.5),
-//       decoration: BoxDecoration(
-//           borderRadius: BorderRadius.circular(5.0),
-//           border: Border.all(color: Colors.black)),
-//       child: DropdownButton(
-//           elevation: 0,
-//           value: 5,
-//           underline: Container(color: Colors.transparent),
-//           onChanged: (int? newValue) {
-//             dropdownValue = newValue!;
-//           },
-//           items: const [
-//             DropdownMenuItem(child: Text('5km'), value: 5),
-//             DropdownMenuItem(child: Text('10km'), value: 10),
-//             DropdownMenuItem(child: Text('20km'), value: 20),
-//             DropdownMenuItem(child: Text('40km'), value: 40),
-//           ]),
-//     );
-//   }
-// }
