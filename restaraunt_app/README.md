@@ -1,16 +1,13 @@
-# restaraunt_app
+# Restauranter
 
-A new Flutter project.
+A Flutter application designed to eliminate the need for people to wait in long lines for dining in at a Restaurant and allows for users to put themselves in a virtual line or make reservations.
 
-## Getting Started
+## Running/Installing the App
 
-This project is a starting point for a Flutter application.
+  #### Clone the project : ```git clone "repo_url"```
+  #### Install the needed dependencies by going to the project directory in the terminal and run: ```flutter pub get```
+  #### Run the app: ```flutter run```
 
-A few resources to get you started if this is your first Flutter project:
+## Resources
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Google Places API: Used to obtain restaurant data
