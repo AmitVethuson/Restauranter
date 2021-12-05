@@ -14,16 +14,16 @@ Google Places API: Used to obtain restaurant data
 
 ## Screenshots of the app
 
-<ul>
-<li>![a screenshot of the app](https://github.com/vashistpatel/BookRestaurantTime/blob/main/images/1.png)</li>
 
-<li>Below screenshots show a user registering. First he enters a invalid email address, then he retypes his password incorrectly.</li>
-<li>![a screenshot of the app](https://github.com/vashistpatel/BookRestaurantTime/blob/main/images/2.2.png)</li>
-<li><li>![a screenshot of the app](https://github.com/vashistpatel/BookRestaurantTime/blob/main/images/2.3.png)</li>
+![a screenshot of the app](https://github.com/vashistpatel/BookRestaurantTime/blob/main/images/1.png)
 
-<li>Here the user is logging into the app after registering.</li>
-<li>![a screenshot of the app](https://github.com/vashistpatel/BookRestaurantTime/blob/main/images/2.4.png)</li>
-</ul>
+Below screenshots show a user registering. First he enters a invalid email address, then he retypes his password incorrectly.
+![a screenshot of the app](https://github.com/vashistpatel/BookRestaurantTime/blob/main/images/2.2.png)
+![a screenshot of the app](https://github.com/vashistpatel/BookRestaurantTime/blob/main/images/2.3.png)
+
+Here the user is logging into the app after registering.
+![a screenshot of the app](https://github.com/vashistpatel/BookRestaurantTime/blob/main/images/2.4.png)
+
 You are greeted with the home page, which has a list of restaurants near you.
 ![a screenshot of the app](https://github.com/vashistpatel/BookRestaurantTime/blob/main/images/3.png)
 
