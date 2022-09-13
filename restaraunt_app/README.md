@@ -15,7 +15,7 @@ Google Places API: Used to obtain restaurant data
 ## Screenshots of the app
 
 
-![a screenshot of the app](https://github.com/vashistpatel/BookRestaurantTime/blob/main/images/1.png)
+![a screenshot of the app](https://github.com/AmitVethuson/Restauranter/blob/main/images/1.png)
 
 Below screenshots show a user registering. First he enters a invalid email address, then he retypes his password incorrectly.<br>
 ![a screenshot of the app](https://github.com/AmitVethuson/Restauranter/blob/main/images/2.2.png)<br>
